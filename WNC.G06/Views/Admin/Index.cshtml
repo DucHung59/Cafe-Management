@@ -1,0 +1,35 @@
+﻿@model List<WNC.G06.Models.UserModel>
+
+@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "_LayoutAdmin.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Tên người dùng</td>
+            <td>Email</td>
+            <td>Trạng thái</td>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>@Model[i].UserName</td>
+                <td>@Model[i].Email</td>
+                <td>
+                    @if(Model[i].Status)
+                    {
+                        <span>Bình thường</span>
+                    }
+                    else 
+                    {
+                        <span>Bị vô hiệu hóa</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
