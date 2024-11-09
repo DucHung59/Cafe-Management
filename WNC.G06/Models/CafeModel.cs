@@ -17,6 +17,8 @@ namespace WNC.G06.Models
         [Required]
         public string Description { get; set; }
         [Required]
+        public bool Status { get; set; }
+        [Required]
         public int UserID { get; set; }
 
         [ForeignKey("UserID")]
