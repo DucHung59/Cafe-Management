@@ -47,6 +47,9 @@ namespace WNC.G06.Migrations
                         .HasColumnType("varchar(10)")
                         .HasColumnName("Phone");
 
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
@@ -208,7 +211,7 @@ namespace WNC.G06.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(max)")
-                        .HasColumnName("Eamil");
+                        .HasColumnName("Email");
 
                     b.Property<string>("Password")
                         .IsRequired()

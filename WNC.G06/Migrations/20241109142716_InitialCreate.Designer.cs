@@ -12,8 +12,8 @@ using WNC.G06.Models.Repository;
 namespace WNC.G06.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241103142951_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20241109142716_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,9 @@ namespace WNC.G06.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(10)")
                         .HasColumnName("Phone");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
@@ -211,7 +214,7 @@ namespace WNC.G06.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(max)")
-                        .HasColumnName("Eamil");
+                        .HasColumnName("Email");
 
                     b.Property<string>("Password")
                         .IsRequired()
