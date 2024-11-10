@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WNC.G06.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,7 @@ namespace WNC.G06.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "varchar(max)", nullable: false),
-                    Eamil = table.Column<string>(type: "varchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     PermissionID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -57,6 +57,7 @@ namespace WNC.G06.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "varchar(10)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
