@@ -14,7 +14,7 @@ namespace WNC.G06.Models
         public string UserName { get; set; }
         [Column("Password", TypeName = "varchar(max)"), Required]
         public string Password { get; set; }
-        [Column("Eamil", TypeName = "varchar(max)"), Required]
+        [Column("Email", TypeName = "varchar(max)"), Required]
         public string Email { get; set; }
         [Required]
         public Boolean Status { get; set; }
