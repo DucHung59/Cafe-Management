@@ -1,0 +1,52 @@
+﻿@model WNC.G06.Models.ProductModel
+
+@{
+    ViewData["Title"] = "Add New Product";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="AddProduct" method="post">
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label"></label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="imgUrl" class="control-label"></label>
+        <input asp-for="imgUrl" class="form-control" />
+        <span asp-validation-for="imgUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="Status" class="control-label"></label>
+        <input asp-for="Status" type="checkbox" class="form-check-input" />
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CafeID" class="control-label"></label>
+        <select asp-for="CafeID" class="form-control" asp-items="ViewBag.Cafes">
+            <option value="">Select a Cafe</option>
+        </select>
+        <span asp-validation-for="CafeID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Product</button>
+    </div>
+</form>

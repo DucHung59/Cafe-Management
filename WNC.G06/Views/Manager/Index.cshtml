@@ -1,2 +1,12 @@
-﻿@{
+﻿@model List<WNC.G06.Models.UserModel>
+
+@{
+    ViewData["Title"] = "Manager Page";
 }
+
+<form asp-action="AddCafe" method="get">
+    <button type="submit">Them thông tin cửa hàng</button>
+</form>
+<form asp-action="AddProduct" method="get">
+    <button type="submit">Them thông tin sản phẩm</button>
+</form>
