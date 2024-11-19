@@ -14,7 +14,6 @@ namespace WNC.G06.Models
         public float Price { get; set; }
         [Column("imgUrl", TypeName = "varchar(max)"), Required]
         public string imgUrl {get; set;}
-        [Column("Description", TypeName = "varchar(max)"), Required]
         public string Description { get; set; }
         [Required]
         public Boolean Status { get; set; }
