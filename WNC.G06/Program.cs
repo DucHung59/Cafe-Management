@@ -14,9 +14,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<CafeRepository>();
-
+builder.Services.AddScoped<ProductRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -36,6 +35,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; // Chỉ sử dụng HTTP (an toàn hơn)
     options.Cookie.IsEssential = true; // Cookie luôn được lưu (bắt buộc cho Session)
 });
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -58,6 +59,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
