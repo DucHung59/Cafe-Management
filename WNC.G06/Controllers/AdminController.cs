@@ -64,9 +64,18 @@ namespace WNC.G06.Controllers
             var user = await _dataContext.Users.SingleOrDefaultAsync(u => u.UserID == id);
             if (user != null)
             {
-                _dataContext.Users.Remove(user);
-                await _dataContext.SaveChangesAsync();
-                return Json(new { success = true });
+                user.Status = false;
+                _dataContext.SaveChanges();
+
+                int userCount = await _dataContext.Users
+                    .Where(u => u.PermissionID != 1)
+                    .CountAsync();
+
+                int activeUserCount = await _dataContext.Users
+                    .Where(u => u.PermissionID != 1)
+                    .CountAsync(x => x.Status == true);
+
+                return Json(new { success = true, activeUserCount, userCount });
             }
             return Json(new { success = false });
         }

@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Phần mềm quản lý</title>
+    <link rel="stylesheet" href="~/css/LayoutAdminCN.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AccessDenied.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WNC.G06.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 bg-secondary text-white p-3" style="min-height: 100vh;">
+                <div class="sidebar-header">
+                    <img src="~/css/Images/Icon/Echo Shop Logo.svg" alt="anh-logo" width="50%" class="pb-3">
+                    <h4 class="text-center" style="cursor: default">@User.Identity.Name</h4>
+                </div>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-white bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="border-radius: 0px">
+                                Tài khoản
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body bg-secondary d-flex flex-column">
+                                <a class="btn text-white text-start" asp-action="Index" asp-controller="Admin">Danh sách</a>
+                                @{
+                                    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                                }
+                                <a class="btn text-white text-start" asp-action="AccountDetail" asp-controller="Admin" asp-route-id="@userId">Thiết lập</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed text-white bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="border-radius: 0px">
+                                Thanh toán
+                            </button>
+                        </h2>
+                        <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body bg-secondary d-flex flex-column">
+                                <a href="#" class="btn text-white text-start">Danh sách</a>
+                                <a href="#" class="btn text-white text-start">Trạng thái</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                        </h2>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10">
+                <header class="d-flex justify-content-between align-items-center bg-light p-3">
+                    <h5>@ViewData["Title"]</h5>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-submit">Đăng xuất</button>
+                        </form>
+                    }
+                </header>
+
+                <div class="p-3">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
