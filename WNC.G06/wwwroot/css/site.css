@@ -18,7 +18,8 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin: 0;
+    padding: 0;
 }
 
 .hidden {
@@ -40,7 +41,7 @@ body {
 }
 
 .active {
-    color: #198754;
+    color: #FDBA38;
     transform: scale(1.1);
     transition: 0.3s ease-in-out;
 }
@@ -59,10 +60,25 @@ body {
 }
 
     .input-style:focus {
-        border: solid 1px #4CAF50;
+        border: solid 1px #FDBA38;
         outline: none;
     }
 
 table {
     cursor: default;
 }
+
+.btn-submit {
+    color: #FDBA38;
+    border-color: #FDBA38;
+}
+
+    .btn-submit:hover {
+        color: #fff;
+        background-color: #FDBA38;
+        border-color: #FDBA38;
+    }
+
+    .btn-check:focus + .btn-submit, .btn-submit:focus {
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.5);
+    }

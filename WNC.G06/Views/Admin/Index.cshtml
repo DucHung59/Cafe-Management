@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Admin Page";
-    Layout = "_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     int index = 1; 
 }
 
@@ -12,7 +12,7 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <p class="text-sm mb-0 text-capitalize">Users</p>
-                    <h4 class="mb-0">@Model.Count</h4>
+                    <h4 id="user-count" class="mb-0">@Model.Count</h4>
                 </div>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
@@ -23,7 +23,7 @@
         </div>
         <hr class="dark horizontal my-0" />
         <div class="card-footer p-2 ps-3">
-            <span class="text-success">@Model.Count(x => x.Status == true)</span>
+            <span id="count-active" class="text-success">@Model.Count(x => x.Status == true)</span>
             tài khoản bình thường
         </div>
     </div>
@@ -42,7 +42,7 @@
     <tbody>
         @foreach (var user in Model)
         {
-            <tr id="user-@user.UserID">
+            <tr id="user-@user.UserID" class="user-list">
                 <td class="text-center">@index</td>
                 <td class="text-center">@user.UserName</td>
                 <td class="text-center">@user.Email</td>
@@ -99,6 +99,25 @@
 
                 if (result.success) {
                     document.getElementById(`user-${userId}`).remove();
+
+                    const rows = document.querySelectorAll('.user-list');
+                    rows.forEach((row, idx) => {
+                        const indexCell = row.querySelector('.text-center:first-child');
+                        if (indexCell) {
+                            indexCell.textContent = idx + 1;
+                        }
+                    });
+
+                    const userCountElement = document.querySelector('#user-count');
+                    if (userCountElement) {
+                        userCountElement.textContent = result.activeUserCount;
+                    }
+
+                    const activeUserCountElement = document.querySelector('#count-active');
+                    if (activeUserCountElement) {
+                        activeUserCountElement.textContent = result.activeUserCount;
+                    }
+
                     alert("Xóa thành công!");
                 } else {
                     alert("Xóa thất bại!");
