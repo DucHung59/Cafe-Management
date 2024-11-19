@@ -12,8 +12,8 @@ using WNC.G06.Models.Repository;
 namespace WNC.G06.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241109142716_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241117105428_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -178,8 +178,7 @@ namespace WNC.G06.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("varchar(max)")
-                        .HasColumnName("Description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("Price")
                         .HasColumnType("real");

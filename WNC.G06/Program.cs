@@ -14,6 +14,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CafeRepository>();
+builder.Services.AddScoped<ProductRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -26,6 +28,8 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("admin", policy => policy.RequireRole("admin"))
     .AddPolicy("manager", policy => policy.RequireRole("manager"))
     .AddPolicy("staff", policy => policy.RequireRole("staff"));
+
+
 
 
 // Add services to the container.
@@ -48,6 +52,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
