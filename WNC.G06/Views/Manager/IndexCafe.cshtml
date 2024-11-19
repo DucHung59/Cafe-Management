@@ -1,0 +1,76 @@
+﻿@model IEnumerable<WNC.G06.Models.ProductModel>
+
+<link rel="stylesheet" href="~/css/NewProduct.css" asp-append-version="true" />
+<script src="~/js/DeleteProductJavaScript.js"></script>
+
+@if (Model.Any())
+{
+    <div class="form-container-List">
+        <h2 class="form-title">Danh sách sản phẩm</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Hình ảnh</th>
+                    <th>Tên hàng</th>
+                    <th>Đơn giá</th>
+                    <th>Mô tả</th>
+                    <th>Cửa hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Xử lý</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    var product = Model.ElementAt(i);
+                    <tr id="product-row-@product.ProductID" class="@(product.Status ? "active" : "inactive")">
+                        <td>@(i + 1)</td>
+                        <td>
+                            <img src="@ViewBag.ImagePaths[i]"
+                                 alt="Ảnh sản phẩm"
+                                 style="width:50px; height:50px; object-fit:cover;" />
+                        </td>
+                        <td>@product.ProductName</td>
+                        <td>
+                            @string.Format("{0:n0} VND", product.Price)
+                            @if (product.Price >= 100000)
+                            {
+                                <button class="buttonDele" onclick="confirmDiscount(@product.ProductID)">Giảm giá</button>
+                            }
+                        </td>
+                        <td>@product.Description</td>
+                        <td>@product.Cafe?.CafeName</td>
+                        <td>@(product.Status ? "Hoạt động" : "Không hoạt động")</td>
+                        <td>
+                            <button class="buttonDele" onclick="confirmDelete(@product.ProductID)">Xóa</button>
+                            <button class="buttonUpdate" onclick="confirmUpdate(@product.ProductID)">Update</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="form-container-List">
+        <h2 class="form-title">Danh sách sản phẩm</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Hình ảnh</th>
+                    <th>Tên hàng</th>
+                    <th>Đơn giá</th>
+                    <th>Mô tả</th>
+                    <th>Cửa hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Xử lý</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <p>Danh sách sản phẩm trống.</p>
+}

@@ -16,8 +16,22 @@ public class ProductRepository
         await _dataContext.Products.AddAsync(product);
         await _dataContext.SaveChangesAsync();
     }
-    public IEnumerable<ProductModel> GetCafes()
+  
+    public IEnumerable<ProductModel> GetAllProducts()
     {
-        return _dataContext.Products.Include(u => u.Cafe).ToList();
+        return _dataContext.Products
+               .Include(p => p.Cafe)  
+               .ToList();
     }
+
+    public void DeleteProduct(int productId)
+    {
+        var product = _dataContext.Products.Find(productId);
+        if (product != null)
+        {
+            _dataContext.Products.Remove(product);
+            _dataContext.SaveChanges();
+        }
+    }
+
 }
