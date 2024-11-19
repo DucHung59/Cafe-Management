@@ -21,5 +21,35 @@ namespace WNC.G06.Services
 
             return user;
         }
+
+        public async Task<UserModel> Register(string username, string password, string email)
+        {
+            var existingUser = await _context.Users
+        .FirstOrDefaultAsync(u => u.UserName == username || u.Email == email);
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException("Username hoặc email đã được sử dụng.");
+            }
+
+            var user = new UserModel
+            {
+                UserName = username,
+                Password = password,
+                Email = email,
+                Status = true,
+                PermissionID = 2
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return new UserModel
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Status = user.Status,
+                PermissionID = user.PermissionID
+            };
+        }
     }
 }

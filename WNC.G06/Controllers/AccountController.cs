@@ -3,12 +3,17 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WNC.G06.Services;
+using WNC.G06.Models;
+using Microsoft.EntityFrameworkCore;
+using WNC.G06.Models.Repository;
 
 namespace WNC.G06.Controllers
 {
     public class AccountController : Controller
     {
+
         private readonly UserService _userService;
+
 
         public AccountController(UserService userService)
         {
@@ -48,6 +53,23 @@ namespace WNC.G06.Controllers
             }
 
             TempData["ErrorMessage"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(UserModel model)
+        {
+            try
+            {
+                var user = await _userService.Register(model.UserName, model.Password, model.Email);
+                TempData["InfoMessage"] = "Đăng ký thành công, vui lòng đăng nhập";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
             return RedirectToAction("Index", "Home");
         }
 

@@ -3,27 +3,56 @@
 @{
     ViewData["Title"] = "Admin Page";
     Layout = "_LayoutAdmin.cshtml";
+    int index = 1; 
 }
 
+<div class="mb-4">
+    <div class="card bg-white" style="width: 200px">
+        <div class="card-header p-2 ps-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p class="text-sm mb-0 text-capitalize">Users</p>
+                    <h4 class="mb-0">@Model.Count</h4>
+                </div>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <hr class="dark horizontal my-0" />
+        <div class="card-footer p-2 ps-3">
+            <span class="text-success">@Model.Count(x => x.Status == true)</span>
+            tài khoản bình thường
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped table-hover table-bordered">
+    <thead class="fw-bolder">
 <form asp-action="AddUser" method="get">
     <button type="submit">Them nguoi dung</button>
 </form>
 <table class="table">
     <thead>
         <tr>
-            <td>Tên người dùng</td>
-            <td>Email</td>
-            <td>Trạng thái</td>
+            <td class="text-center">#</td>
+            <td class="text-center">Tên người dùng</td>
+            <td class="text-center">Email</td>
+            <td class="text-center">Trạng thái</td>
+            <td class="text-center">Chỉnh sửa</td>
         </tr>
     </thead>
     <tbody>
-        @for (int i = 0; i < Model.Count; i++)
+        @foreach (var user in Model)
         {
-            <tr>
-                <td>@Model[i].UserName</td>
-                <td>@Model[i].Email</td>
-                <td>
-                    @if(Model[i].Status)
+            <tr id="user-@user.UserID">
+                <td class="text-center">@index</td>
+                <td class="text-center">@user.UserName</td>
+                <td class="text-center">@user.Email</td>
+                <td class="text-center">
+                    @if(user.Status)
                     {
                         <span>Bình thường</span>
                     }
@@ -32,7 +61,57 @@
                         <span>Bị vô hiệu hóa</span>
                     }
                 </td>
+                <td class="d-flex justify-content-center">
+                    <a href="AccountDetail/@user.UserID" class="btn link-primary ms-2 me-2">Chi tiết</a>
+                    @if (user.Status)
+                    {
+                        <form asp-action="DisableUser" asp-controller="Admin" method="post">
+                            <input type="hidden" name="id" value="@user.UserID" />
+                            <button href="#" type="submit" class="btn link-danger ms-2 me-2">Vô hiệu hóa</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="ActiveUser" asp-controller="Admin" method="post">
+                            <input type="hidden" name="id" value="@user.UserID" />
+                            <button href="#" type="submit" class="btn link-danger ms-2 me-2">Kích hoạt</button>
+                        </form>
+                    }
+                    
+                    <input type="hidden" name="__RequestVerificationToken" value="@user.UserID" />
+                    <button class="btn link-danger ms-2 me-2" href="#" onclick="DeleteUser(@user.UserID)">Xóa</button>
+                </td>
             </tr>
+            index++;
         }
     </tbody>
 </table>
+
+<script>
+    async function DeleteUser(userId) {
+        if (confirm("Bạn có chắc chắn xóa người dùng này?")) {
+            try {
+                const res = await fetch('Account/Delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify({ UserID: userId })
+                })
+
+                const result = await res.json();
+
+                if (result.success) {
+                    document.getElementById(`user-${userId}`).remove();
+                    alert("Xóa thành công!");
+                } else {
+                    alert("Xóa thất bại!");
+                }
+            } catch (error) {
+                console.log('Error: ', error);
+                alert("Đã có lỗi xảy ra");
+            }
+        }
+    }
+</script>
