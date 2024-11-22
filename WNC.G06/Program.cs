@@ -16,6 +16,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CafeRepository>();
 builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<PaymentRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

@@ -1,5 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model WNC.G06.Models.PaymentModel
+
+<link rel="stylesheet" href="~/css/Payment.css" asp-append-version="true" />
+
+<div class="payment-container">
+    <h2>Thanh toán phí dịch vụ</h2>
+
+    @if (ViewBag.PaymentSuccess != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.PaymentSuccess
+        </div>
+    }
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    // Lọc lỗi "User" (hoặc lỗi cụ thể nào bạn muốn bỏ qua)
+                    if (error.ErrorMessage != "The User field is required.")
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+
+
+    <p><strong>Người dùng:</strong> @ViewData["UserName"]</p>
+    <p><strong>Số lượng cửa hàng:</strong> @ViewData["Count"]</p>
+    <p><strong>Số tiền mỗi cửa hàng:</strong> 10,000,000 VND</p>
+    <p><strong>Thời gian thanh toán:</strong> @Model.Date.ToString("dd/MM/yyyy HH:mm:ss")</p>
+    <p><strong>Số tiền phải thanh toán:</strong> @string.Format("{0:N0}", ViewData["Amount"]) VND</p>
+
+    <form asp-action="Payment" method="post">
+        <button type="submit" class="btn btn-success">Xác nhận thanh toán</button>
+    </form>
+
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Quay lại trang chủ</a>
+</div>

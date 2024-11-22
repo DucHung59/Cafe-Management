@@ -14,12 +14,14 @@ public class ManagerController : Controller
     private readonly string _managerPermission = "manager";
     private readonly ProductRepository _productRepository;
     private readonly CafeRepository _cafeRepository;
+    private readonly PaymentRepository _paymentRepository;
 
-    public ManagerController(DataContext dataContext, ProductRepository productRepository, CafeRepository cafeRepository)
+    public ManagerController(DataContext dataContext, ProductRepository productRepository, CafeRepository cafeRepository, PaymentRepository paymentRepository)
     {
         _dataContext = dataContext;
         _productRepository = productRepository;
         _cafeRepository = cafeRepository;
+        _paymentRepository = paymentRepository;
     }
 
     public IActionResult Index()
@@ -89,52 +91,8 @@ public class ManagerController : Controller
         return View();
     }
 
-    /* [HttpPost]
-      public async Task<IActionResult> AddProduct(ProductModel product)
-      {
-          var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-          if (string.IsNullOrEmpty(userId))
-          {
-              return RedirectToAction("AccessDenied", "Home");
-          }
-
-          var cafes = _dataContext.Cafes.Where(c => c.UserID.ToString() == userId).ToList();
-
-          if (!cafes.Any())
-          {
-              ModelState.AddModelError("CafeID", "Bạn không có cửa hàng nào để thêm sản phẩm.");
-              ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName");
-              return View(product);
-          }
-
-          bool isProductExistsInSelectedCafe = _dataContext.Products.Any(p => p.ProductName == product.ProductName && p.CafeID == product.CafeID);
-
-          if (isProductExistsInSelectedCafe)
-          {
-              ModelState.AddModelError("ProductName", "Sản phẩm này đã tồn tại trong cửa hàng đã chọn. Vui lòng chọn tên khác.");
-
-              ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName", product.CafeID);
-              return View(product);
-          }
-
-          var newProduct = new ProductModel
-          {
-              ProductName = product.ProductName,
-              Price = product.Price,
-              imgUrl = product.imgUrl,
-              Description = product.Description,
-              Status = true,
-              CafeID = product.CafeID 
-          };
-
-          await _productRepository.AddProductAsync(newProduct);
-
-          return RedirectToAction("Index"); 
-      }*/
-
-   [HttpPost]
-    public async Task<IActionResult> AddProduct(ProductModel product)
+    [HttpPost]
+    public async Task<IActionResult> AddProduct(ProductModel product, IFormFile uploadedImage)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -152,18 +110,13 @@ public class ManagerController : Controller
             return View(product);
         }
 
-        // Kiểm tra nếu sản phẩm đã tồn tại trong cửa hàng
-        bool isProductExistsInSelectedCafe = _dataContext.Products
-            .Any(p => p.ProductName == product.ProductName && p.CafeID == product.CafeID);
-
-        if (isProductExistsInSelectedCafe)
+        if (_dataContext.Products.Any(p => p.ProductName == product.ProductName && p.CafeID == product.CafeID))
         {
             ModelState.AddModelError("ProductName", "Sản phẩm này đã tồn tại trong cửa hàng đã chọn. Vui lòng chọn tên khác.");
             ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName", product.CafeID);
             return View(product);
         }
 
-        // Kiểm tra giá sản phẩm
         if (product.Price < 0)
         {
             ModelState.AddModelError("Price", "Giá sản phẩm không được nhỏ hơn 0.");
@@ -171,20 +124,26 @@ public class ManagerController : Controller
             return View(product);
         }
 
-        // Kiểm tra định dạng URL hình ảnh
-
-        if (string.IsNullOrEmpty(product.imgUrl) || !product.imgUrl.Trim().EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+        if (uploadedImage == null || uploadedImage.Length == 0)
         {
-            ModelState.AddModelError("imgUrl", "URL của hình ảnh phải có đuôi .png và không được để trống.");
+            ModelState.AddModelError("imgUrl", "Bạn phải tải lên một hình ảnh.");
             ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName", product.CafeID);
             return View(product);
         }
-        // Tạo sản phẩm mới
+
+        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
+        string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/css/Images", imageName);
+
+        using (var stream = new FileStream(savePath, FileMode.Create))
+        {
+            await uploadedImage.CopyToAsync(stream);
+        }
+
         var newProduct = new ProductModel
         {
             ProductName = product.ProductName,
             Price = product.Price,
-            imgUrl = product.imgUrl,
+            imgUrl = imageName, 
             Description = product.Description,
             Status = true,
             CafeID = product.CafeID
@@ -194,30 +153,27 @@ public class ManagerController : Controller
 
         return RedirectToAction("Index", "Manager");
     }
+
+
+
     [HttpGet]
     public IActionResult IndexProduct()
     {
-        // Lấy UserID của người dùng đăng nhập
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {
             return RedirectToAction("AccessDenied", "Home");
         }
-
-        // Lấy danh sách các CafeID mà người dùng sở hữu
         var cafeIds = _dataContext.Cafes
             .Where(c => c.UserID.ToString() == userId)
             .Select(c => c.CafeID)
             .ToList();
-
-        // Lấy tất cả sản phẩm của các cửa hàng mà người dùng sở hữu (bao gồm cả sản phẩm có Status = False)
         var products = _dataContext.Products
-            .Where(p => cafeIds.Contains(p.CafeID)) // Lọc theo cửa hàng
-            .Include(p => p.Cafe)  // Nạp thông tin cửa hàng (Cafe)
+            .Where(p => cafeIds.Contains(p.CafeID)) 
+            .Include(p => p.Cafe)  
             .ToList();
 
-        // Xử lý ảnh sản phẩm
         var imageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "Images");
         var imagePaths = products.Select(product =>
         {
@@ -239,23 +195,17 @@ public class ManagerController : Controller
         var product = _dataContext.Products.FirstOrDefault(p => p.ProductID == productId);
         if (product != null)
         {
-            product.Status = false;  // Chỉ thay đổi trạng thái thành False
-            _dataContext.SaveChanges();  // Lưu thay đổi vào cơ sở dữ liệu
+            product.Status = false;  
+            _dataContext.SaveChanges(); 
         }
 
-        return Json(new { success = true, productId = productId });  // Trả về kết quả JSON báo thành công
+        return Json(new { success = true, productId = productId });  
     }
-
-
-
-
-
 
 
     [HttpGet]
     public IActionResult IndexCafe()
     {
-        // Lấy UserID của người dùng từ thông tin đăng nhập
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
         if (userIdClaim == null)
         {
@@ -264,29 +214,11 @@ public class ManagerController : Controller
 
         var userId = int.Parse(userIdClaim.Value);
 
-        // Gọi repository để lấy danh sách cửa hàng
         var cafes = _cafeRepository.GetCafesByUserId(userId);
 
         return View(cafes);
     }
 
-
-
-
-    // AJAX Delete
-    [HttpDelete]
-    public IActionResult DeleteProductAjax(int productId)
-    {
-        var product = _productRepository.GetAllProducts().FirstOrDefault(p => p.ProductID == productId);
-
-        if (product != null)
-        {
-            _productRepository.DeleteProduct(productId);
-            return Ok();
-        }
-
-        return NotFound();
-    }
 
     [HttpGet]
     public IActionResult UpdateCafe(int id)
@@ -296,9 +228,98 @@ public class ManagerController : Controller
         {
             return NotFound();
         }
-        return View(cafe); // Trả về view chứa thông tin cafe để chỉnh sửa
+        return View(cafe); 
     }
 
+
+    [HttpGet]
+    public IActionResult Payment()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+        var username = User.Identity?.Name ?? "Guest";
+
+        var userCafeCount = _cafeRepository.GetCafesByUserId(int.Parse(userId)).Count();
+
+        float totalAmount = userCafeCount * 10000000;
+
+        var paymentModel = new PaymentModel
+        {
+            UserID = int.Parse(userId),
+            Amount = totalAmount,
+            Date = DateTime.Now
+        };
+
+        ViewData["UserName"] = username;
+        ViewData["Count"] = userCafeCount;
+        ViewData["Amount"] = totalAmount;
+        ViewData["Date"] = paymentModel.Date;
+
+        return View(paymentModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Payment(PaymentModel payment)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+       if (string.IsNullOrEmpty(userId))
+        {
+            ModelState.AddModelError("", "Không thể xác định người dùng.");
+            AddPaymentViewData(null, 0, payment.Amount); // Đảm bảo dữ liệu được gán
+            return View(payment);
+        }
+        var userCafeCount = _cafeRepository.GetCafesByUserId(int.Parse(userId)).Count();
+
+        if (userCafeCount == 0)
+        {
+            ModelState.AddModelError("", "Bạn chưa có cửa hàng nào để thanh toán.");
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, payment.Amount);
+            return View(payment);
+        }
+
+        float totalAmount = userCafeCount * 10000000;
+
+        var currentMonth = DateTime.Now.Month;
+        var currentYear = DateTime.Now.Year;
+        var hasPaid = await _paymentRepository.HasPaymentForMonthAsync(int.Parse(userId), currentMonth, currentYear);
+
+        if (hasPaid)
+        {
+            ModelState.AddModelError("", "Bạn đã thanh toán hóa đơn cho tháng này.");
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, totalAmount);
+            return View(payment);
+        }
+
+        payment.UserID = int.Parse(userId);
+        payment.Amount = totalAmount;
+        payment.Date = DateTime.Now;
+
+        try
+        {
+            await _paymentRepository.AddPaymentAsync(payment);
+            ViewBag.PaymentSuccess = "Thanh toán thành công!";
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, totalAmount);
+            return View(payment); 
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", $"Có lỗi xảy ra khi xử lý thanh toán: {ex.Message}");
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, totalAmount);
+            return View(payment);
+        }
+    }
+
+    private void AddPaymentViewData(string? userName, int cafeCount, float totalAmount)
+    {
+        ViewData["UserName"] = userName ?? "Không xác định"; 
+        ViewData["Count"] = cafeCount >= 0 ? cafeCount : 0;  
+        ViewData["Amount"] = totalAmount >= 0 ? totalAmount : 0; 
+    }
 
 
 
