@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Manager Page";
+    Layout = "~/Views/Shared/_LayoutAdminCN.cshtml";
 }
 
 <form asp-action="AddCafe" method="get">
@@ -15,4 +16,7 @@
 </form>
 <form asp-action="IndexCafe" method="get">
     <button type="submit">Hiển thị cửa hàng</button>
+</form>
+<form asp-action="Payment" method="get">
+    <button type="submit">Thanh toan dich vụ </button>
 </form>

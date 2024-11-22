@@ -1,9 +1,4 @@
 ﻿body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
 }
 
 .form-container {
@@ -12,7 +7,7 @@
     margin-top: 60px;
     padding: 20px;
     background-color: #f8f9fa;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
 }
 
@@ -24,121 +19,17 @@
     display: block;
     width: 100%;
     margin-top: 10px;
-    background-color: tomato;
+    background-color: orange;
     border-color: gold;
-    color: white;
     padding: 10px;
     font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
-    .buttonAdd:hover {
-        background-color: darkred;
-        transform: scale(1.05);
-    }
-
-.form-container-List {
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f8f9fa;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 20px;
-}
-
-    .table th,
-    .table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .table th {
-        background-color: #ffc107;
-        color: white;
-        font-weight: bold;
-    }
-
-    .table td {
-        color: orange;
-        font-size: 14px;
-    }
-
-.description-column {
-    width: 300px;
-    word-wrap: break-word;
-    white-space: normal;
-}
-
 .form-title {
     text-align: center;
     margin: 0 0 20px;
     font-size: 24px;
-    color: orange;
+    color: #333;
     font-weight: bold;
     margin-bottom: 30px;
-}
-
-.buttonDele, .buttonUpdate, .buttonRestore {
-    background-color: tomato;
-    border-color: gold;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-    .buttonDele:hover, .buttonUpdate:hover, .buttonRestore:hover {
-        background-color: darkred;
-        transform: scale(1.05);
-    }
-
-p {
-    text-align: center;
-    margin-top: 30px;
-    color: tomato;
-    font-size: 20px;
-}
-
-th, td {
     color: orange;
-    font-size: 14px;
 }
-
-/* Dimmed effect for inactive products */
-.dimmed {
-    opacity: 0.5; /* Reduce opacity to make both the product image and information appear faded */
-    color: #888; /* Optional: Change text color to a lighter shade for the information */
-    pointer-events: none; /* Disable interaction with dimmed elements */
-}
-
-    /* Dimmed effect for images */
-    .dimmed img {
-        opacity: 0.5; /* Specifically reduce the image opacity */
-    }
-
-/* Style the Restore button */
-.buttonRestore {
-    background-color: green;
-    border-color: lightgreen;
-    color: white;
-}
-
-    .buttonRestore:hover {
-        background-color: darkgreen;
-        transform: scale(1.05);
-    }

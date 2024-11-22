@@ -16,6 +16,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CafeRepository>();
 builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<PaymentRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -56,6 +57,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=test}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
