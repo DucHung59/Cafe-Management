@@ -42,5 +42,10 @@ namespace WNC.G06.Controllers
 
             return true;
         }
+
+        public IActionResult NV()
+        {
+            return View();
+        }
     }
 }
