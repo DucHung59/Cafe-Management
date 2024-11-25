@@ -30,6 +30,12 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("manager", policy => policy.RequireRole("manager"))
     .AddPolicy("staff", policy => policy.RequireRole("staff"));
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian hết hạn Session (30 phút)
+    options.Cookie.HttpOnly = true; // Chỉ sử dụng HTTP (an toàn hơn)
+    options.Cookie.IsEssential = true; // Cookie luôn được lưu (bắt buộc cho Session)
+});
 
 
 
@@ -46,6 +52,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

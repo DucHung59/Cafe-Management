@@ -18,51 +18,11 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin: 0;
+    padding: 0;
 }
 
 .hidden {
     display: none;
 }
 
-.btn-group {
-    margin: 0 25px;
-    padding: 0 20px;
-    text-decoration: none;
-    color: #666;
-    background: white;
-    font-weight: bold;
-    font-size: 15px;
-    -webkit-transition: all 0.1s linear;
-    -moz-transition: all 0.1s linear;
-    transition: all 0.1s linear;
-    border: none;
-}
-
-.active {
-    color: #198754;
-    transform: scale(1.1);
-    transition: 0.3s ease-in-out;
-}
-
-.input-style {
-    font-family: "Roboto", sans-serif;
-    outline: 0;
-    background: #f2f2f2;
-    width: 100%;
-    border: 1px solid #ccc;
-    margin: 0 0 15px;
-    padding: 15px;
-    box-sizing: border-box;
-    font-size: 14px;
-    transition: border 0.3s ease-in-out;
-}
-
-    .input-style:focus {
-        border: solid 1px #4CAF50;
-        outline: none;
-    }
-
-table {
-    cursor: default;
-}
