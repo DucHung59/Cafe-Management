@@ -2,7 +2,10 @@
 
 <link rel="stylesheet" href="~/css/HienThiDanhSach.css" asp-append-version="true" />
 <script src="~/js/DeleteAndRestoreProductJavaScript.js"></script>
-
+@{
+    ViewData["Title"] = "Manager Page";
+    Layout = "~/Views/Shared/_LayoutCN.cshtml";
+}
 @if (Model.Any())
 {
     <div class="form-container-List">
