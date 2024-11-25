@@ -1,26 +1,3 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="container" style="width: 400px">
-    <h2 class="text-center">Welcome</h2>
-    <form asp-action="Login" asp-controller="Account" method="post">
-        <div class="mb-3 d-flex">
-            <label class="me-2 align-middle" style="width: 80px">Username</label>
-            <input class="form-control" style="width: 300px" id="username" name="username">
-        </div>
-        <div class="mb-3 d-flex">
-            <label class="me-2 align-middle" style="width: 80px">Password</label>
-            <input type="password" class="form-control" style="width: 300px" id="password" name="password">
-        </div>
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger text-center m-1">
-                @TempData["ErrorMessage"]
-            </div>
-        }
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary">Login</button>
-        </div>
-    </form>
-</div>

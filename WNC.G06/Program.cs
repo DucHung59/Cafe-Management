@@ -14,6 +14,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CafeRepository>();
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<PaymentRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -26,6 +29,14 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("admin", policy => policy.RequireRole("admin"))
     .AddPolicy("manager", policy => policy.RequireRole("manager"))
     .AddPolicy("staff", policy => policy.RequireRole("staff"));
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian hết hạn Session (30 phút)
+    options.Cookie.HttpOnly = true; // Chỉ sử dụng HTTP (an toàn hơn)
+    options.Cookie.IsEssential = true; // Cookie luôn được lưu (bắt buộc cho Session)
+});
+
 
 
 // Add services to the container.
@@ -41,6 +52,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -48,6 +60,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

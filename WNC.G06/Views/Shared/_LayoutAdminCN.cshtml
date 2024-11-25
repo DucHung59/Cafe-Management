@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/LayoutAdminCN.css" asp-append-version="true" />
+
     <title>Posapp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AccessDenied.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WNC.G06.styles.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
@@ -27,14 +33,27 @@
                     <li><a href="#my_footer">BÁO CÁO DOANH THU</a></li>
                     <li><a href="#my_footer">VỀ CHÚNG TÔI</a></li>  
                 </ul>
-                <div id="avatar">
-                    <a>ĐĂNG XUẤT</a>
-                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div id="avatar">
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                            <a><button type="submit" class="btn text-white">Đăng xuất</button></a>
+                        </form>
+                    </div>
+                } 
+                else
+                {
+                    <div id="avatar">
+                        <a asp-action="Index" asp-controller="Account">Đăng nhập/Đăng ký</a>
+                    </div>
+                }
             </nav>
         </section>
     </header>
-    <main role="main" class="pb-3">
-        @RenderBody()
+    <main role="main">
+        <div>
+            @RenderBody()
+        </div>
     </main>
     <footer id="my_footer" class="section-p1">
         <div class="col">
@@ -88,5 +107,10 @@
             <p>2024 BTL LTWNC Nhóm 06</p>
         </div>
     </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

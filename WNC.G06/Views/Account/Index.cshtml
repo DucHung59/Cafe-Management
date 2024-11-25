@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="m-5 d-flex justify-content-center">
+    <div class="shadow p-3 mb-5" style="width: 450px">
+        <div class="d-flex justify-content-center mb-3 ">
+            <button class="btn-group active" id="btnLogin">Đăng nhập</button>
+            <button class="btn-group" id="btnRegister">Đăng ký</button>
+        </div>
+        <hr style="margin: 0 auto;" />
+        <div class="container d-flex justify-content-center p-2" style="width: 400px">
+            <div class="login-form" style="width: 400px">
+                <h3 class="text-center" style="font-family: " Montserrat", monospace;">Chào mừng bạn trở lại!</h3>
+                <form asp-action="Login" asp-controller="Account" method="post">
+                    <div class="mb-3">
+                        <label class="ms-2 align-middle" >Tài khoản</label>
+                        <input class="input-style" style="width: 100%" id="username" name="username" placeholder="User name..." />
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="ms-2 align-middle" >Mật khẩu</label>
+                        <input type="password" class="input-style" style="width: 100%" id="password" name="password" placeholder="Password..." />
+                    </div>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger text-center mb-2">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    else if (TempData["InfoMessage"] != null)
+                    {
+                        <div class="alert alert-success text-center mb-2">
+                            @TempData["InfoMessage"]
+                        </div>
+                    }
+
+                    <div class="button-style d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit" style="width: 100%">Đăng nhập</button>
+                    </div>
+                </form>
+            </div>
+            <div class="register-form hidden" style="width: 400px">
+                <h3 class="text-center" style="font-family: " Montserrat", monospace;">Tạo tài khoản mới tại đây!</h3>
+                <form class="d-flex flex-column justify-content-center" asp-action="Register" asp-controller="Account" method="post">
+                    <div class="mb-3">
+                        <label class="ms-2 align-middle" >Tên tài khoản:</label>
+                        <input class="input-style" style="width: 100%" id="username" name="username" placeholder="User name..." />
+                    </div>
+                    <div class="mb-3">
+                        <label class="ms-2 align-middle" >Email:</label>
+                        <input class="input-style" style="width: 100%" id="email" name="email" placeholder="Email... "/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="ms-2 align-middle" >Mật khẩu:</label>
+                        <input type="password" class="input-style" style="width: 100%" id="password" name="password" placeholder="Password..." />
+                    </div>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger text-center mb-2">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    <div class="button-style d-flex justify-content-center">
+                        <button type="submit" class="btn btn-submit" style="width: 100%">Đăng ký ngay!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

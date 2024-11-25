@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text.Json;
+using WNC.G06.Models;
 using WNC.G06.Models.Repository;
 
 namespace WNC.G06.Controllers
 {
-
     public class AdminController : Controller
     {
         private readonly DataContext _dataContext;
@@ -25,7 +26,9 @@ namespace WNC.G06.Controllers
                 return RedirectToAction("AccessDenied", "Home");
             }
 
-            var users = await _dataContext.Users.ToListAsync();
+            var users = await _dataContext.Users
+                .Where(u => u.PermissionID != 1)
+                .ToListAsync();
             return View(users);
         }
 
@@ -44,6 +47,67 @@ namespace WNC.G06.Controllers
             }
 
             return true;
+        }
+
+        [Route("AccountDetail/{id}")]
+        public async Task<IActionResult> AccountDetail(int id)
+        {
+            var user = await _dataContext.Users.SingleOrDefaultAsync(x => x.UserID == id);
+            return View(user);
+        }
+
+        [HttpPost]
+        [Route("Account/Delete")]
+        public async Task<IActionResult> DeleteUser([FromBody] JsonElement data)
+        {
+            int id = data.GetProperty("UserID").GetInt32();
+            var user = await _dataContext.Users.SingleOrDefaultAsync(u => u.UserID == id);
+            if (user != null)
+            {
+                user.Status = false;
+                _dataContext.SaveChanges();
+
+                int userCount = await _dataContext.Users
+                    .Where(u => u.PermissionID != 1)
+                    .CountAsync();
+
+                int activeUserCount = await _dataContext.Users
+                    .Where(u => u.PermissionID != 1)
+                    .CountAsync(x => x.Status == true);
+
+                return Json(new { success = true, activeUserCount, userCount });
+            }
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DisableUser(int id)
+        {
+            var user = await _dataContext.Users.SingleOrDefaultAsync(u => u.UserID == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Status = false;
+            _dataContext.SaveChanges();
+
+            return RedirectToAction("Index", "Admin");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActiveUser(int id)
+        {
+            var user = await _dataContext.Users.SingleOrDefaultAsync(u => u.UserID == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Status = true;
+            _dataContext.SaveChanges();
+
+            return RedirectToAction("Index", "Admin");
         }
     }
 }

@@ -1,0 +1,83 @@
+﻿@model WNC.G06.Models.ProductModel
+
+<link rel="stylesheet" href="~/css/NewProduct.css" asp-append-version="true" />
+
+<div class="form-container">
+<h2 class="form-title">Thêm sản phẩm mới </h2>
+
+<form asp-action="AddProduct" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label">Tên hàng</label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label">Đơn giá</label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Hình ảnh</label>
+        <input type="file" name="uploadedImage" class="form-control" id="imageInput" />
+        <span asp-validation-for="imgUrl" class="text-danger"></span>
+    </div>
+
+    <!-- Hiển thị tên và ảnh khi người dùng chọn -->
+    <div id="imagePreview" style="display: none; margin-top: 15px;">
+        <p><strong>Ảnh:</strong> <span id="fileName"></span></p>
+        <img id="previewImage" src="" alt="Image Preview" style="max-width: 200px; max-height: 200px; border: 1px solid #ddd;" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description">Mô tả</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CafeID" class="control-label">Cửa hàng</label>
+        <select asp-for="CafeID" class="form-control" asp-items="ViewBag.Cafes">
+            <option value="">Chọn cửa hàng</option>
+        </select>
+        <span asp-validation-for="CafeID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="buttonAdd">Thêm sản phẩm</button>
+    </div>
+</form>
+</div>
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+
+    <script>
+        // Lắng nghe sự kiện change trên input file
+        document.getElementById("imageInput").addEventListener("change", function (event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+            const previewContainer = document.getElementById("imagePreview");
+            const previewImage = document.getElementById("previewImage");
+            const fileName = document.getElementById("fileName");
+
+            // Kiểm tra nếu file hợp lệ
+            if (file) {
+                // Hiển thị tên file
+                fileName.textContent = file.name;
+
+                // Tạo URL đối tượng để hiển thị ảnh
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Hiển thị container preview
+                previewContainer.style.display = "block";
+            } else {
+                // Nếu không có file, ẩn container preview
+                previewContainer.style.display = "none";
+            }
+        });
+    </script>
+}

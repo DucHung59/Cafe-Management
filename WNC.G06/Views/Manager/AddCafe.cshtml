@@ -1,0 +1,43 @@
+﻿@model WNC.G06.Models.CafeModel
+<link rel="stylesheet" href="~/css/NewProduct.css" asp-append-version="true" />
+
+<div class="form-container">
+    <h2 class ="form-title">Thêm cửa hàng mới</h2>
+
+<form asp-action="AddCafe" method="post">
+    <div class="form-group">
+        <label asp-for="CafeName" class="control-label">Tên cửa hàng </label>
+        <input asp-for="CafeName" class="form-control" />
+        <span asp-validation-for="CafeName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address" class="control-label">Địa chỉ</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Phone" class="control-label">Số điện thoại</label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description">Mô tả</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Chủ chi nhánh</label>
+        <input class="form-control" type="text" value="@ViewData["UserName"]" readonly />
+    </div>
+
+        <button type="submit" class="buttonAdd">Thêm cửa hàng</button>
+</form>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,44 +1,347 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using WNC.G06.Models;
 using WNC.G06.Models.Repository;
 
-namespace WNC.G06.Controllers
+public class ManagerController : Controller
 {
-    public class ManagerController : Controller
+    private readonly DataContext _dataContext;
+    private readonly string _managerPermission = "manager";
+    private readonly ProductRepository _productRepository;
+    private readonly CafeRepository _cafeRepository;
+    private readonly PaymentRepository _paymentRepository;
+
+    public ManagerController(DataContext dataContext, ProductRepository productRepository, CafeRepository cafeRepository, PaymentRepository paymentRepository)
     {
-        private readonly DataContext _dataContext;
-        private readonly string _managerPermission = "manager";
+        _dataContext = dataContext;
+        _productRepository = productRepository;
+        _cafeRepository = cafeRepository;
+        _paymentRepository = paymentRepository;
+    }
 
-        public ManagerController(DataContext dataContext)
+    public IActionResult Index()
+    {
+        if (!CheckAccess(_managerPermission))
         {
-            _dataContext = dataContext;
+            return RedirectToAction("AccessDenied", "Home");
+        }
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult AddCafe()
+    {
+        if (!CheckAccess(_managerPermission))
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+        var username = User.Identity?.Name ?? "Guest";
+        ViewData["UserName"] = username;
+
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddCafe(CafeModel cafe)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("AccessDenied", "Home");
         }
 
-        public IActionResult Index()
+        if (_cafeRepository.IsCafenameExist(cafe.CafeName))
         {
-            if (!CheckAccess(_managerPermission))
-            {
-                return RedirectToAction("AccessDenied", "Home");
-            }
+            ModelState.AddModelError("CafeName", "Tên cửa hàng đã tồn tại. Vui lòng chọn tên khác.");
 
-            return View();
+            var username = User.Identity?.Name ?? "Guest";
+            ViewData["UserName"] = username;
+
+            return View(); 
         }
 
-        private bool CheckAccess(string Permission)
+        var newCafe = new CafeModel
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            CafeName = cafe.CafeName,
+            Address = cafe.Address,
+            Phone = cafe.Phone,
+            Description = cafe.Description,
+            Status = true,
+            UserID = int.Parse(userId)
+        };
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                return false;
-            }
+        await _cafeRepository.AddCafeAsync(newCafe);
+        return RedirectToAction("Index");
+    }
 
-            if (User.FindFirst(ClaimTypes.Role)?.Value != Permission)
-            {
-                return false;
-            }
 
-            return true;
+
+    [HttpGet]
+    public IActionResult AddProduct()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); 
+        var cafes = _dataContext.Cafes.Where(c => c.UserID.ToString() == userId).ToList();
+        ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName");
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddProduct(ProductModel product, IFormFile uploadedImage)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+
+        var cafes = _dataContext.Cafes.Where(c => c.UserID.ToString() == userId).ToList();
+
+        if (!cafes.Any())
+        {
+            ModelState.AddModelError("CafeID", "Bạn không có cửa hàng nào để thêm sản phẩm.");
+            ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName");
+            return View(product);
+        }
+
+        if (_dataContext.Products.Any(p => p.ProductName == product.ProductName && p.CafeID == product.CafeID))
+        {
+            ModelState.AddModelError("ProductName", "Sản phẩm này đã tồn tại trong cửa hàng đã chọn. Vui lòng chọn tên khác.");
+            ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName", product.CafeID);
+            return View(product);
+        }
+
+        if (product.Price < 0)
+        {
+            ModelState.AddModelError("Price", "Giá sản phẩm không được nhỏ hơn 0.");
+            ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName", product.CafeID);
+            return View(product);
+        }
+
+        if (uploadedImage == null || uploadedImage.Length == 0)
+        {
+            ModelState.AddModelError("imgUrl", "Bạn phải tải lên một hình ảnh.");
+            ViewBag.Cafes = new SelectList(cafes, "CafeID", "CafeName", product.CafeID);
+            return View(product);
+        }
+
+        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
+        string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/css/Images", imageName);
+
+        using (var stream = new FileStream(savePath, FileMode.Create))
+        {
+            await uploadedImage.CopyToAsync(stream);
+        }
+
+        var newProduct = new ProductModel
+        {
+            ProductName = product.ProductName,
+            Price = product.Price,
+            imgUrl = imageName, 
+            Description = product.Description,
+            Status = true,
+            CafeID = product.CafeID
+        };
+
+        await _productRepository.AddProductAsync(newProduct);
+
+        return RedirectToAction("Index", "Manager");
+    }
+
+
+
+    [HttpGet]
+    public IActionResult IndexProduct()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+        var cafeIds = _dataContext.Cafes
+            .Where(c => c.UserID.ToString() == userId)
+            .Select(c => c.CafeID)
+            .ToList();
+        var products = _dataContext.Products
+            .Where(p => cafeIds.Contains(p.CafeID)) 
+            .Include(p => p.Cafe)  
+            .ToList();
+
+        var imageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "Images");
+        var imagePaths = products.Select(product =>
+        {
+            var imagePath = Path.Combine(imageDirectory, product.imgUrl);
+
+            return System.IO.File.Exists(imagePath)
+                ? $"/css/Images/{product.imgUrl}"
+                : "/css/Images/default.png";
+        }).ToList();
+
+        ViewBag.ImagePaths = imagePaths;
+        return View(products);
+    }
+
+
+    [HttpPost]
+    public IActionResult DeleteProduct(int productId)
+    {
+        var product = _dataContext.Products.FirstOrDefault(p => p.ProductID == productId);
+        if (product != null)
+        {
+            product.Status = false;  
+            _dataContext.SaveChanges(); 
+        }
+
+        return Json(new { success = true, productId = productId });  
+    }
+
+
+    [HttpGet]
+    public IActionResult IndexCafe()
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+
+        var userId = int.Parse(userIdClaim.Value);
+
+        var cafes = _cafeRepository.GetCafesByUserId(userId);
+
+        return View(cafes);
+    }
+
+
+    [HttpGet]
+    public IActionResult UpdateCafe(int id)
+    {
+        var cafe = _dataContext.Cafes.FirstOrDefault(c => c.CafeID == id);
+        if (cafe == null)
+        {
+            return NotFound();
+        }
+        return View(cafe); 
+    }
+
+
+    [HttpGet]
+    public IActionResult Payment()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+        var username = User.Identity?.Name ?? "Guest";
+
+        var userCafeCount = _cafeRepository.GetCafesByUserId(int.Parse(userId)).Count();
+
+        float totalAmount = userCafeCount * 10000000;
+
+        var paymentModel = new PaymentModel
+        {
+            UserID = int.Parse(userId),
+            Amount = totalAmount,
+            Date = DateTime.Now
+        };
+
+        ViewData["UserName"] = username;
+        ViewData["Count"] = userCafeCount;
+        ViewData["Amount"] = totalAmount;
+        ViewData["Date"] = paymentModel.Date;
+
+        return View(paymentModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Payment(PaymentModel payment)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+       if (string.IsNullOrEmpty(userId))
+        {
+            ModelState.AddModelError("", "Không thể xác định người dùng.");
+            AddPaymentViewData(null, 0, payment.Amount); // Đảm bảo dữ liệu được gán
+            return View(payment);
+        }
+        var userCafeCount = _cafeRepository.GetCafesByUserId(int.Parse(userId)).Count();
+
+        if (userCafeCount == 0)
+        {
+            ModelState.AddModelError("", "Bạn chưa có cửa hàng nào để thanh toán.");
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, payment.Amount);
+            return View(payment);
+        }
+
+        float totalAmount = userCafeCount * 10000000;
+
+        var currentMonth = DateTime.Now.Month;
+        var currentYear = DateTime.Now.Year;
+        var hasPaid = await _paymentRepository.HasPaymentForMonthAsync(int.Parse(userId), currentMonth, currentYear);
+
+        if (hasPaid)
+        {
+            ModelState.AddModelError("", "Bạn đã thanh toán hóa đơn cho tháng này.");
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, totalAmount);
+            return View(payment);
+        }
+
+        payment.UserID = int.Parse(userId);
+        payment.Amount = totalAmount;
+        payment.Date = DateTime.Now;
+
+        try
+        {
+            await _paymentRepository.AddPaymentAsync(payment);
+            ViewBag.PaymentSuccess = "Thanh toán thành công!";
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, totalAmount);
+            return View(payment); 
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", $"Có lỗi xảy ra khi xử lý thanh toán: {ex.Message}");
+            AddPaymentViewData(User.Identity?.Name, userCafeCount, totalAmount);
+            return View(payment);
         }
     }
+
+    private void AddPaymentViewData(string? userName, int cafeCount, float totalAmount)
+    {
+        ViewData["UserName"] = userName ?? "Không xác định"; 
+        ViewData["Count"] = cafeCount >= 0 ? cafeCount : 0;  
+        ViewData["Amount"] = totalAmount >= 0 ? totalAmount : 0; 
+    }
+
+
+
+    private bool CheckAccess(string permission)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return false;
+        }
+
+        if (User.FindFirst(ClaimTypes.Role)?.Value != permission)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    /*private int GetLoggedInUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return int.TryParse(userIdClaim, out int userId) ? userId : 0;
+    }*/
 }

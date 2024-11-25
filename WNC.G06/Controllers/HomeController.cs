@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using WNC.G06.Models;
 
 namespace WNC.G06.Controllers
@@ -15,7 +16,17 @@ namespace WNC.G06.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            switch (User.FindFirst(ClaimTypes.Role)?.Value)
+            {
+                case "admin":
+                    return RedirectToAction("Index", "Admin");
+                case "manager":
+                    return RedirectToAction("Index", "Manager");
+                case "staff":
+                    return RedirectToAction("Index", "Staff");
+                default:
+                    return View();
+            }
         }
 
         public IActionResult AccessDenied()
@@ -29,12 +40,6 @@ namespace WNC.G06.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult test(){
-            return View();
-        }
 
-        public IActionResult Master(){
-            return View();
-        }
     }
 }
