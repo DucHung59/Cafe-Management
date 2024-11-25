@@ -189,20 +189,6 @@ public class ManagerController : Controller
     }
 
 
-    [HttpPost]
-    public IActionResult DeleteProduct(int productId)
-    {
-        var product = _dataContext.Products.FirstOrDefault(p => p.ProductID == productId);
-        if (product != null)
-        {
-            product.Status = false;  
-            _dataContext.SaveChanges(); 
-        }
-
-        return Json(new { success = true, productId = productId });  
-    }
-
-
     [HttpGet]
     public IActionResult IndexCafe()
     {
@@ -217,18 +203,6 @@ public class ManagerController : Controller
         var cafes = _cafeRepository.GetCafesByUserId(userId);
 
         return View(cafes);
-    }
-
-
-    [HttpGet]
-    public IActionResult UpdateCafe(int id)
-    {
-        var cafe = _dataContext.Cafes.FirstOrDefault(c => c.CafeID == id);
-        if (cafe == null)
-        {
-            return NotFound();
-        }
-        return View(cafe); 
     }
 
 
@@ -319,6 +293,88 @@ public class ManagerController : Controller
         ViewData["UserName"] = userName ?? "Không xác định"; 
         ViewData["Count"] = cafeCount >= 0 ? cafeCount : 0;  
         ViewData["Amount"] = totalAmount >= 0 ? totalAmount : 0; 
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteProduct([FromBody] int productId)
+    {
+        if (productId <= 0)
+        {
+            return Json(new { success = false, message = "ID sản phẩm không hợp lệ" });
+        }
+
+        var product = await _dataContext.Products.FindAsync(productId);
+        if (product == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+        }
+
+        product.Status = false;
+        await _dataContext.SaveChangesAsync();
+
+        return Json(new { success = true, message = "Sản phẩm đã bị xóa" });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RestoreProduct([FromBody] int productId)
+    {
+        if (productId <= 0)
+        {
+            return Json(new { success = false, message = "ID sản phẩm không hợp lệ" });
+        }
+
+        var product = await _dataContext.Products.FindAsync(productId);
+        if (product == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy sản phẩm" });
+        }
+
+        product.Status = true; 
+        await _dataContext.SaveChangesAsync();
+
+        return Json(new { success = true, message = "Sản phẩm đã được khôi phục" });
+    }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteCafe([FromBody] int cafeId)
+    {
+        if (cafeId <= 0)
+        {
+            return Json(new { success = false, message = "CafeID không hợp lệ" });
+        }
+
+        var cafe = await _dataContext.Cafes.FindAsync(cafeId);
+        if (cafe == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy cửa hàng" });
+        }
+
+        cafe.Status = false;
+        await _dataContext.SaveChangesAsync();
+
+        return Json(new { success = true, message = "Cửa hàng đã bị xóa" });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RestoreCafe([FromBody] int cafeId)
+    {
+        if (cafeId <= 0)
+        {
+            return Json(new { success = false, message = "CafeID không hợp lệ" });
+        }
+
+        var cafe = await _dataContext.Cafes.FindAsync(cafeId);
+        if (cafe == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy cửa hàng" });
+        }
+
+        cafe.Status = true; 
+        await _dataContext.SaveChangesAsync();
+
+        return Json(new { success = true, message = "Cửa hàng đã được khôi phục." });
     }
 
 

@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<WNC.G06.Models.CafeModel>
 
 <link rel="stylesheet" href="~/css/HienThiDanhSach.css" asp-append-version="true" />
-@{
-    Layout = "~/Views/Shared/_LayoutAdminCN.cshtml";
-}
+<script src="~/js/DeleteAndRestoreCafeJavaScript.js"></script>
 @if (Model.Any())
 {
     <div class="form-container-List">
         <h2 class="form-title">Danh sách cửa hàng</h2>
-        <button class="btnListadd">Thêm cửa hàng</button>
+        <form asp-action="AddCafe" method="get">
+            <button class="btnListadd">Thêm cửa hàng</button>
+        </form>
         <table class="table">
             <thead>
                 <tr>
@@ -24,15 +24,26 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     var cafe = Model.ElementAt(i);
-                    <tr id="product-row-@cafe.CafeID">
+                    var dimClass = cafe.Status ? "" : "dimmed";
+                    <tr id="cafe-row-@cafe.CafeID">
                         <td>@(i + 1)</td>
-                        <td>@cafe.CafeName</td>
-                        <td>@cafe.Address</td>
-                        <td>@cafe.Phone</td>
-                        <td>@cafe.Description</td>
+                        <td class="@dimClass">@cafe.CafeName</td>
+                        <td class="@dimClass">@cafe.Address</td>
+                        <td class="@dimClass">@cafe.Phone</td>
+                        <td class="@dimClass">@cafe.Description</td>
                         <td>
-                            <button class="buttonDele" onclick="confirmDelete(@cafe.CafeID)">Xóa</button>
-                            <button class="buttonUpdate" onclick="confirmUpdate(@cafe.CafeID)">Update</button>
+                            @if (cafe.Status)
+                            {
+                                <button id="delete-btn-@cafe.CafeID" class="buttonDele" onclick="deleteCafe('@cafe.CafeID')">Xóa</button>
+                                <button id="restore-btn-@cafe.CafeID" class="buttonRestore" onclick="restoreCafe('@cafe.CafeID')" style="display: none;">Khôi phục</button>
+                                <button id="update-btn-@cafe.CafeID" class="buttonUpdate" onclick="updateCafe('@cafe.CafeID')">Sửa</button>
+                            }
+                            else
+                            {
+                                <button id="delete-btn-@cafe.CafeID" class="buttonDele" onclick="deleteCafe('@cafe.CafeID')" style="display: none;">Xóa</button>
+                                <button id="restore-btn-@cafe.CafeID" class="buttonRestore" onclick="restoreCafe('@cafe.CafeID')">Khôi phục</button>
+                                <button id="update-btn-@cafe.CafeID" class="buttonUpdate" onclick="updateCafe('@cafe.CafeID')">Sửa</button>
+                            }
                         </td>
                     </tr>
                 }
@@ -44,6 +55,9 @@ else
 {
     <div class="form-container-List">
         <h2 class="form-title">Danh sách cửa hàng</h2>
+        <form asp-action="AddCafe" method="get">
+            <button class="btnListadd">Thêm cửa hàng</button>
+        </form>
         <table class="table">
             <thead>
                 <tr>
