@@ -101,7 +101,7 @@ header #avartar img{
 #navbar ul > li {
     width: 100%;
     list-style: none;   
-    padding: 10px 0px;
+    padding: 10px 5px;
     position: relative;
 }
 
@@ -142,4 +142,9 @@ header #avartar img{
 .DX button:hover{
     color: #FF5274;
     cursor: pointer;
+}
+
+#mainbody{
+    width: 82%;
+    height: 100%;
 }
