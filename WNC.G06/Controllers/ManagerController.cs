@@ -30,7 +30,7 @@ public class ManagerController : Controller
         {
             return RedirectToAction("AccessDenied", "Home");
         }
-        return View();
+        return RedirectToAction("IndexCafe", "Manager");
     }
 
     [HttpGet]
