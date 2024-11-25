@@ -279,13 +279,11 @@ header{
         #NVright #thanhtien-lower{
             background-color: #FFFFFF;
             width: 100%;
-            padding: 10px 6px;
-            display: flex;
-            justify-content: space-between;
+            padding: 10px 30%;
             align-items: center;
         }
 
-        #NVright #thanhtien-lower #save{
+        /* #NVright #thanhtien-lower #save{
             width: 48%;
             padding: 14px 0px;
             background-color: #DFE3F3;
@@ -298,16 +296,17 @@ header{
         #NVright #thanhtien-lower #save:hover{
             cursor: pointer;
             background-color: #adb3cb;
-        }
+        } */
 
         #NVright #thanhtien-lower #commit{
-            width: 48%;
+            width: 100%;
             padding: 14px 0px;
             background-color: #217CA3;
             color: #FFFFFF;
             font-size: 14px;
             border: #FFFFFF solid;
             border-radius: 15px;
+            align-items: center;
         }
 
         #NVright #thanhtien-lower #commit:hover{
