@@ -152,6 +152,7 @@ header {
             border-color: #FFFFFF;
             border-width: 2px;
             border-radius: 20px;
+            text-decoration: none;
         }
 
         #avatar a:hover{

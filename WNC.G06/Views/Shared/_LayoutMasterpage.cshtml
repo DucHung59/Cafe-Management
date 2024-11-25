@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/LayoutMasterpage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AdminStyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/AdminStyle.css" asp-append-version="true" />
+
     <title>Document</title>
 </head>
 <body>
@@ -20,15 +24,17 @@
             <nav id="navbar"> 
                 <div id="des">Phần mềm quản lý (nhiều) quán cafe theo mô hình Saas</div>
                 <div id="avatar">
-                    <a>ĐĂNG NHẬP</a>
+                    <a asp-action="Index" asp-controller="Account">ĐĂNG NHẬP</a>
                     <a>ĐĂNG KÝ</a>
                 </div>
             </nav>
         </section>
     </header>
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
+    <div>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
     <footer id="my_footer" class="section-p1">
         <div class="col">
             <img class="logo" src="~/css/Images/Icon/logo.png" alt="">
@@ -81,5 +87,9 @@
             <p>2024 BTL LTWNC Nhóm 06</p>
         </div>
     </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
