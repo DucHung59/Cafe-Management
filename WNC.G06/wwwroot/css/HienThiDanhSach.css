@@ -6,7 +6,7 @@
     line-height: 1.6;
 }
 
-.buttonAdd {
+/*.buttonAdd {
     display: block;
     width: 100%;
     margin-top: 10px;
@@ -23,7 +23,7 @@
     .buttonAdd:hover {
         background-color: darkred;
         transform: scale(1.05);
-    }
+    }*/
 
 .form-container-List {
     width: 100%;
@@ -35,7 +35,7 @@
 }
 
 .table {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
     background-color: white;
@@ -76,7 +76,7 @@
 .btnListadd {
     display: block;
     margin: 10px auto;
-    width: 9%;
+    width: 15%;
     background-color: orange;
     border-color: gold;
     padding: 10px;
@@ -86,8 +86,8 @@
     cursor: pointer;
 }
 
-.buttonDele, .buttonUpdate, .buttonRestore {
-    background-color: tomato;
+/*
+    .buttonDele, buttonUpdate .buttonRestore {
     border-color: gold;
     color: white;
     padding: 5px 10px;
@@ -97,10 +97,11 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-    .buttonDele:hover, .buttonUpdate:hover, .buttonRestore:hover {
-        background-color: darkred;
+    .buttonDele:hover, buttonUpdate:hover .buttonRestore:hover {
+        background-color: dar;
         transform: scale(1.05);
     }
+*/
 
 p {
     text-align: center;
@@ -117,7 +118,6 @@ th, td {
 
 .dimmed {
     opacity: 0.5;
-    color: #888;
     pointer-events: none;
 }
 
@@ -125,14 +125,47 @@ th, td {
     .dimmed img {
         opacity: 0.5;
     }
-
 .buttonRestore {
-    background-color: green;
     border-color: lightgreen;
+    background-color: green;
     color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.5;
 }
 
     .buttonRestore:hover {
         background-color: darkgreen;
+        transform: scale(1.05);
+    }
+
+.buttonDele {
+    border-color: gold;
+    background-color: tomato;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.buttonDele:hover {
+    background-color: orangered;
+    transform: scale(1.05);
+}
+.buttonUpdate {
+    border-color: gold;
+    background-color: chocolate;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+    .buttonUpdate:hover {
+        background-color: coral;
         transform: scale(1.05);
     }

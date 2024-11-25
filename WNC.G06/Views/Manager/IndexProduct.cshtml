@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<WNC.G06.Models.ProductModel>
 
 <link rel="stylesheet" href="~/css/HienThiDanhSach.css" asp-append-version="true" />
-<script src="~/js/DeleteProductJavaScript.js"></script>
-@{
-    Layout = "~/Views/Shared/_LayoutAdminCN.cshtml";
-}
+<script src="~/js/DeleteAndRestoreProductJavaScript.js"></script>
+
 @if (Model.Any())
 {
     <div class="form-container-List">
         <h2 class="form-title">Danh sách sản phẩm</h2>
-        <button class="btnListadd">Thêm sản phẩm</button>
+        <form asp-action="AddProduct" method="get">
+            <button class="btnListadd">Thêm sản phẩm</button>
+        </form>
         <table class="table">
             <thead>
                 <tr>
@@ -26,7 +26,7 @@
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     var product = Model.ElementAt(i);
-                    var dimClass = product.Status ? "" : "dimmed";  // Áp dụng lớp dimmed nếu trạng thái là False
+                    var dimClass = product.Status ? "" : "dimmed";  
 
                     <tr id="product-row-@product.ProductID">
                         <td>@(i + 1)</td>
@@ -39,26 +39,23 @@
                         <td class="@dimClass">@product.ProductName</td>
                         <td class="@dimClass">
                             @string.Format("{0:n0} VND", product.Price)
-                            @if (product.Price >= 100000)
-                            {
-                                <button class="buttonDele" onclick="deleteProduct(@product.ProductID)">Giảm giá</button>
-                            }
                         </td>
                         <td class="@dimClass">@product.Description</td>
                         <td class="@dimClass">@product.Cafe?.CafeName</td>
                         <td>
-                            @if (product.Status)  // Nếu trạng thái là True, hiển thị nút "Xóa"
+                            @if (product.Status)  
                             {
-                                <button class="buttonDele" onclick="deleteProduct(@product.ProductID)">Xóa</button>
+                                <button id="delete-btn-@product.ProductID" class="buttonDele" onclick="deleteProduct('@product.ProductID')">Xóa</button>
+                                <button id="restore-btn-@product.ProductID" class="buttonRestore" onclick="restoreProduct('@product.ProductID')" style="display: none;">Khôi phục</button>
                             }
-                            else  // Nếu trạng thái là False, hiển thị nút "Khôi phục"
+                            else  
                             {
-                                <button class="buttonRestore" onclick="restoreProduct(@product.ProductID)">Khôi phục</button>
+                                <button id="delete-btn-@product.ProductID" class="buttonDele" onclick="deleteProduct('@product.ProductID')" style="display: none;">Xóa</button>
+                                <button id="restore-btn-@product.ProductID" class="buttonRestore" onclick="restoreProduct('@product.ProductID')">Khôi phục</button>
                             }
                         </td>
                     </tr>
                 }
-
             </tbody>
         </table>
     </div>
@@ -67,6 +64,9 @@ else
 {
     <div class="form-container-List">
         <h2 class="form-title">Danh sách sản phẩm</h2>
+        <form asp-action="AddProduct" method="get">
+            <button class="btnListadd">Thêm sản phẩm</button>
+        </form>
         <table class="table">
             <thead>
                 <tr>

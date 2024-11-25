@@ -17,7 +17,7 @@ namespace WNC.G06.Models.Repository
         // Lấy thông tin danh sách cửa hàng dựa trên UserID người dùng đăng nhập
        public IEnumerable<CafeModel> GetCafesByUserId(int userId)
         {
-            return _context.Cafes.Where(c => c.UserID == userId && c.Status).ToList();
+            return _context.Cafes.Where(c => c.UserID == userId).ToList();
         }
 
 
