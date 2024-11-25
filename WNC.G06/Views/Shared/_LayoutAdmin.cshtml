@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="~/css/LayoutAdminCN.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AdminStyle.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/AccessDenied.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WNC.G06.styles.css" asp-append-version="true" />
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" style="padding: 0px">
             <!-- Sidebar -->
             <nav class="col-md-2 bg-secondary text-white p-3" style="min-height: 100vh;">
                 <div class="sidebar-header">
@@ -44,7 +45,7 @@
                         </h2>
                         <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                             <div class="accordion-body bg-secondary d-flex flex-column">
-                                <a href="#" class="btn text-white text-start">Danh sách</a>
+                                <a asp-action="PaymentList" asp-controller="Admin" class="btn text-white text-start">Danh sách</a>
                                 <a href="#" class="btn text-white text-start">Trạng thái</a>
                             </div>
                         </div>
@@ -57,9 +58,9 @@
             </nav>
 
             <!-- Main Content -->
-            <main class="col-md-10">
+            <main class="col-md-10" style="padding: 0px">
                 <header class="d-flex justify-content-between align-items-center bg-light p-3">
-                    <h5>@ViewData["Title"]</h5>
+                    <h3 class="text-header">@ViewData["Title"]</h3>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
