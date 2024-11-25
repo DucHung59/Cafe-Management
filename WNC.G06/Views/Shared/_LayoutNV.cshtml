@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]Posapp</title>
+    <link rel="stylesheet" href="~/css/LayoutNV.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <div id="name">Nguyễn Đức Lượng</div>
+        <div id="DX">
+            <a>ĐĂNG XUẤT</a>
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>

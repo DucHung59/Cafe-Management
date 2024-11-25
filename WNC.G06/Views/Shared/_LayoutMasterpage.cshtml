@@ -3,57 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/css/LayoutAdminCN.css" asp-append-version="true" />
-
-    <title>Posapp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/AccessDenied.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WNC.G06.styles.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/css/LayoutMasterpage.css" asp-append-version="true" />
+    <title>Document</title>
 </head>
 <body>
     <header>
-        <!-- SMALL HEADER -->
         <section id="small-header"> 
-            <div>Phần mềm quản lý (nhiều) quán cafe theo mô hình Saas</div>
-            <span>
+            <div>
                 <img src="~/css/Images/Icon/phone.webp">
                 0165 333 669 
-            </span>
+            </div>
         </section>
         <!-- MAIN HEADER -->
         <section id="main-header">
-            <a ><img src="~/css/Images/Icon/logo.svg" alt="anh-logo"></a>
+            <a ><img src="~/css/Images/Icon/logo.png" alt="anh-logo"></a>
             <nav id="navbar"> 
-                <ul>
-                    <li><a class="active" href="Sản phẩm.aspx">THÔNG TIN CỬA HÀNG</a></li>
-                    <li><a href="Sản phẩm.aspx">SẢN PHẨM</a></li>
-                    <li><a href="SanPham.aspx">THANH TOÁN DỊCH VỤ</a></li>
-                    <li><a href="#my_footer">BÁO CÁO DOANH THU</a></li>
-                    <li><a href="#my_footer">VỀ CHÚNG TÔI</a></li>  
-                </ul>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div id="avatar">
-                        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
-                            <a><button type="submit" class="btn text-white">Đăng xuất</button></a>
-                        </form>
-                    </div>
-                } 
-                else
-                {
-                    <div id="avatar">
-                        <a asp-action="Index" asp-controller="Account">Đăng nhập/Đăng ký</a>
-                    </div>
-                }
+                <div id="des">Phần mềm quản lý (nhiều) quán cafe theo mô hình Saas</div>
+                <div id="avatar">
+                    <a>ĐĂNG NHẬP</a>
+                    <a>ĐĂNG KÝ</a>
+                </div>
             </nav>
         </section>
     </header>
-    <main role="main">
-        <div>
-            @RenderBody()
-        </div>
+    <main role="main" class="pb-3">
+        @RenderBody()
     </main>
     <footer id="my_footer" class="section-p1">
         <div class="col">
@@ -89,7 +63,7 @@
             <a href="#">
                 Số 99 phố Định Công Hạ, Quận Hoàng Mai,</br>Tp Hà Nội
             </a>
-            <a href="#">echo@gmail.com</a>
+            <a href="#">Posapp@gmail.com</a>
         </div>
 
         <div class="col install">
@@ -107,10 +81,5 @@
             <p>2024 BTL LTWNC Nhóm 06</p>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
