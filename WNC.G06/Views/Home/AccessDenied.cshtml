@@ -3,5 +3,22 @@
 *@
 @{
 }
-
-<h1 class="text-danger">Bạn không có quyền truy cập</h1>
+<div class="body-bg">
+    <h1 class="background-403">403</h1>
+    <div class="content-bg">
+        <p class="title-error">
+            > 
+            <span>ERROR CODE</span>: "<i>HTTP 403 Forbidden</i>"</p>
+        <p class="title-error">
+            >
+            <span>ERROR DESCRIPTION</span>: "<i>Truy cập bị từ chối. Bạn không có quyền truy cập vào trang này!</i>"</p>
+        
+        @if (TempData["ErrorMessage"]!= null)
+        {
+            <p class="title-error">
+                >
+                <span>CAUSE EROR</span>: "<i>@TempData["ErrorMessage"]</i>"
+            </p>
+        }
+    </div>
+</div>
