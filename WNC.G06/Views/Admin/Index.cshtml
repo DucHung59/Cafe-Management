@@ -1,7 +1,7 @@
 ﻿@model List<WNC.G06.Models.UserModel>
 
 @{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Danh sách người dùng";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     int index = 1;
     var status = "";
@@ -34,61 +34,63 @@
 
 @if(Model.Any())
 {
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="fw-bolder">
-            <tr>
-                <td class="text-center">#</td>
-                <td class="text-center">Tên người dùng</td>
-                <td class="text-center">Email</td>
-                <td class="text-center">Trạng thái</td>
-                <td class="text-center">Chỉnh sửa</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                @if (user.Status == false)
-                {
-                    status = "disable";
-                }
-                <tr id="user-@user.UserID" class="user-list">
-                    <td class="disable-group @status">@index</td>
-                    <td class="disable-group @status">@user.UserName</td>
-                    <td class="disable-group @status">@user.Email</td>
-                    <td class="disable-group @status text-status">
-                        @if(user.Status)
-                        {
-                            <span>Bình thường</span>
-                        }
-                        else 
-                        {
-                            <span>Bị vô hiệu hóa</span>
-                        }
-                    </td>
-                    <td class="d-flex justify-content-center btn-execute">
-                        <a href="AccountDetail/@user.UserID" class="btn link-primary ms-2 me-2 disable-group @status">Chi tiết</a>
-                        
-                        @if (user.Status)
-                        {
-                            <input type="hidden" name="__RequestVerificationToken" value="@user.UserID" />
-                            <button class="btnDelete btn link-danger ms-2 me-2" href="#" onclick="DeleteUser(@user.UserID)">Xóa</button>
-                        }
-                        else
-                        {
-                            <input type="hidden" name="__RequestVerificationToken" value="@user.UserID" />
-                            <button class="btnActive btn link-danger ms-2 me-2" href="#" onclick="ActiveUser(@user.UserID)">Kích hoạt</button>
-                        }
-                    </td>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="fw-bolder">
+                <tr>
+                    <td>#</td>
+                    <td>Tên người dùng</td>
+                    <td>Email</td>
+                    <td>Trạng thái</td>
+                    <td>Chỉnh sửa</td>
                 </tr>
-                index++;
-                status = "";
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    @if (user.Status == false)
+                    {
+                        status = "disable";
+                    }
+                    <tr id="user-@user.UserID" class="user-list">
+                        <td class="disable-group @status">@index</td>
+                        <td class="disable-group @status">@user.UserName</td>
+                        <td class="disable-group @status">@user.Email</td>
+                        <td class="disable-group @status text-status">
+                            @if(user.Status)
+                            {
+                                <span>Bình thường</span>
+                            }
+                            else 
+                            {
+                                <span>Bị vô hiệu hóa</span>
+                            }
+                        </td>
+                        <td class="d-flex justify-content-center btn-execute">
+                            <a href="AccountDetail/@user.UserID" class="btn link-primary ms-2 me-2 disable-group @status">Chi tiết</a>
+                        
+                            @if (user.Status)
+                            {
+                                <input type="hidden" name="__RequestVerificationToken" value="@user.UserID" />
+                                <button class="btnDelete btn link-danger ms-2 me-2" href="#" onclick="DeleteUser(@user.UserID)">Xóa</button>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="__RequestVerificationToken" value="@user.UserID" />
+                                <button class="btnActive btn link-danger ms-2 me-2" href="#" onclick="ActiveUser(@user.UserID)">Kích hoạt</button>
+                            }
+                        </td>
+                    </tr>
+                    index++;
+                    status = "";
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
-    <h3>Không có tài khoản nào để hiển thị!</h3>
+    <h3 class="text-header">Không có tài khoản nào để hiển thị!</h3>
 }
 <script>
     async function DeleteUser(userId) {
