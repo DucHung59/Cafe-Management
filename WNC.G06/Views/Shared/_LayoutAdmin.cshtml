@@ -13,9 +13,9 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row" style="padding: 0px">
+        <div class="row" style="padding: 0px;">
             <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-2 bg-secondary text-white p-3 toolbar-admin" style="min-height: 100vh;">
+            <nav id="sidebar" class="col-md-2 text-white p-3 toolbar-admin" style="min-height: 100vh;  background: #217CA3">
                 <div class="sidebar-header pb-3" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                     <img src="~/css/Images/Icon/logo2.png" alt="anh-logo" width="40px">
                     <h4 class="text-header" style="cursor: default">@User.Identity.Name</h4>
@@ -23,12 +23,12 @@
                 <div class="accordion accordion-flush" id="accordionFlushExample">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed text-white bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="border-radius: 0px">
+                            <button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="border-radius: 0px; background: #217CA3">
                                 Tài khoản
                             </button>
                         </h2>
                         <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body bg-secondary d-flex flex-column">
+                            <div class="accordion-body d-flex flex-column" style="background: #217CA3">
                                 <a class="btn text-white text-start" asp-action="Index" asp-controller="Admin">Danh sách</a>
                                 @{
                                     var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -39,12 +39,12 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed text-white bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="border-radius: 0px">
+                            <button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" style="border-radius: 0px; background: #217CA3">
                                 Thanh toán
                             </button>
                         </h2>
                         <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body bg-secondary d-flex flex-column">
+                            <div class="accordion-body d-flex flex-column" style="background: #217CA3">
                                 <a asp-action="PaymentList" asp-controller="Admin" class="btn text-white text-start">Danh sách</a>
                             </div>
                         </div>
