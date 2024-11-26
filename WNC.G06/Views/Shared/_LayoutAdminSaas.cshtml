@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/LayoutAdminCN.css" asp-append-version="true" />
+    <title>Posapp</title>
+</head>
+<body>
+    <header>
+        <!-- SMALL HEADER -->
+        <section id="small-header"> 
+            <div>Phần mềm quản lý (nhiều) quán cafe theo mô hình Saas</div>
+            <span>
+                <img src="~/css/Images/Icon/phone.webp">
+                0165 333 669 
+            </span>
+        </section>
+        <!-- MAIN HEADER -->
+        <section id="main-header">
+            <a ><img src="~/css/Images/Icon/logo.png" alt="anh-logo"></a>
+            <nav id="navbar"> 
+                <ul>
+                    <li><a class="active" href="Sản phẩm.aspx">QUẢN LÝ TÀI KHOẢN</a></li>
+                    <li><a href="Sản phẩm.aspx">QUẢN LÝ CỬA HÀNG</a></li>
+                </ul>
+                <div id="avatar">
+                    <a>ĐĂNG XUẤT</a>
+                </div>
+            </nav>
+        </section>
+    </header>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+    <footer id="my_footer" class="section-p1">
+        <div class="col">
+            <img class="logo" src="~/css/Images/Icon/logo.png" alt="">
+            <p>
+                Amet minim mollit non deserunt 
+                ullamco est sit aliqua dolor do 
+                amet sint. Velit officia consequat 
+                duis enim velit mollit.
+            </p>
+            <div class="follow">
+                <div class="icon">
+                    <i class="uil uil-instagram ig"></i>
+                    <i class="uil uil-linkedin ld"></i>
+                    <i class="uil uil-facebook-f fb"></i>
+                    <i class="uil uil-youtube yt"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col link">
+            <h4>Đường dẫn</h4>
+            <a href="#">Sản phẩm</a>
+            <a href="#">Thanh toán dịch vụ</a>
+            <a href="#">Báo cáo doanh thu</a>
+            <a href="#">Về chúng tôi</a>
+            <a href="#">Liên hệ</a>
+        </div>
+
+        <div class="col contact">
+            <h4>Thông tin liên hệ</h4>
+            <a href="#">+84 77 6461 724</a>
+            <a href="#">
+                Số 99 phố Định Công Hạ, Quận Hoàng Mai,</br>Tp Hà Nội
+            </a>
+            <a href="#">echo@gmail.com</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From Appstore & Google Play</p>
+            <div class="row">
+                <img src="~/css/Images/Footer/Appstore.png" alt="">
+                <img src="~/css/Images/Footer/Google Play.png" alt="">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="~/css/Images/Footer/Payment Gateway.png" alt="">
+        </div>
+
+        <div class="copyright">
+            <p>2024 BTL LTWNC Nhóm 06</p>
+        </div>
+    </footer>
+</body>
+</html>
