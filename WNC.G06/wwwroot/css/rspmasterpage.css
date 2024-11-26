@@ -1,0 +1,126 @@
+@media screen and (max-width: 900px){
+/* PHAN HEADER */
+
+#small-header{
+    display: none;
+}
+
+#main-header{
+    padding: 10px 20px;
+}
+
+#navbar{
+    flex-direction: column;
+}
+
+/* PHAN BODY */
+#banner{
+    flex-direction: column-reverse;
+    padding: 10px 20px;
+}
+
+#banner-right{
+    width: 100%;
+    padding: 10px 0px;
+}
+
+#banner-left {
+    height: auto;
+    width: 100%;
+}
+
+#ND1{
+    padding: 30px 20px;
+}
+
+#ND1-bottom{
+    flex-direction: column;
+    padding: 0px;
+}
+
+#ND1-bottom img{
+    width: 100%;
+    height: auto;
+    padding-bottom: 10px;
+    object-fit: cover;
+}
+
+#ND1-bottom div{
+    padding: 0px;
+    width: 100%;
+}
+
+#ND2 {
+    padding: 10px 20px;
+}
+
+#ND2-bottom{
+    flex-direction: column;
+    padding: 0px;
+}
+
+#ND2-bottom img{
+    width: 100%;
+    height: auto;
+}
+
+#ND2-bottom div{
+    padding: 0;
+    width: 100%;
+    align-items: center;
+    height: auto;
+}
+
+#ND2-bottom h3{
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#ND3{
+    padding: 10px 20px;
+}
+
+#ND3-bottom{
+    flex-direction: column-reverse;
+    padding: 0px;
+}
+
+#ND3-bottom img{
+    width: 100%;
+    height: auto;
+}
+
+#ND3-bottom h3{
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#ND3-bottom div{
+    padding: 0;
+    width: 100%;
+    align-items: center;
+    height: auto;
+}
+
+/* PHAN FOOTER */
+footer {
+    flex-direction: column;
+    height: auto;
+    bottom: auto;
+}
+
+.logo {
+    display: none;
+}
+
+footer .col {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+footer .follow{
+    display: none;
+}
+}
