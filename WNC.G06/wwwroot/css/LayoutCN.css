@@ -143,3 +143,7 @@ header #avartar img{
     color: #FF5274;
     cursor: pointer;
 }
+#mainbody {
+    width: 82%;
+    height: 100%;
+}
