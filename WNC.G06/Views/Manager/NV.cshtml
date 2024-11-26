@@ -46,7 +46,6 @@
             </div>
         </div>
         <div id="thanhtien-lower">
-            <input type="button" id="save" value="Lưu">
             <input type="button" id="commit" value="Thanh toán">
         </div>
     </div>
@@ -96,7 +95,7 @@
                 <input class="soluongsp" type="number" value="1" min="1" onchange="updateItemPrice('${productId}', ${productPrice})">
                 <div>
                     <span class="total-price">${productPrice}</span> VND
-                    <img src="~/css/Images/Icon/trash.svg" class="trash-icon" cursor: pointer;" alt="Remove" onclick="removeFromCart('${productId}')">
+                    <img src="/css/Images/Icon/trash.svg" class="trash-icon" alt="Remove" onclick="removeFromCart('${productId}')">
                 </div>
             `;
             document.getElementById('tinhtien').appendChild(cartItem);

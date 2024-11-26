@@ -1,0 +1,27 @@
+@media screen and (max-width: 900px){
+
+    body{
+        flex-direction: column;
+    }
+
+    header{
+        width: 100%;
+    }
+
+    #navbar{
+        align-items: center;
+    }
+
+    .DX{
+        align-items: center;
+    }
+
+    #navbar ul > li {
+        align-items: center;
+        text-align: center;
+    }
+
+    #mainbody{
+        width: 100%;
+    }
+}
