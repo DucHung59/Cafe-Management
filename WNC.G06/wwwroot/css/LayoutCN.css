@@ -103,6 +103,7 @@ header #avartar img{
     list-style: none;   
     padding: 10px 0px;
     position: relative;
+    padding-left: 10px;
 }
 
     #navbar ul > li > a {
