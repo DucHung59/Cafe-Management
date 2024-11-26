@@ -279,13 +279,11 @@ header{
         #NVright #thanhtien-lower{
             background-color: #FFFFFF;
             width: 100%;
-            padding: 10px 6px;
-            display: flex;
-            justify-content: space-between;
+            padding: 10px 30%;
             align-items: center;
         }
 
-        #NVright #thanhtien-lower #save{
+        /* #NVright #thanhtien-lower #save{
             width: 48%;
             padding: 14px 0px;
             background-color: #DFE3F3;
@@ -298,16 +296,17 @@ header{
         #NVright #thanhtien-lower #save:hover{
             cursor: pointer;
             background-color: #adb3cb;
-        }
+        } */
 
         #NVright #thanhtien-lower #commit{
-            width: 48%;
+            width: 100%;
             padding: 14px 0px;
             background-color: #217CA3;
             color: #FFFFFF;
             font-size: 14px;
             border: #FFFFFF solid;
             border-radius: 15px;
+            align-items: center;
         }
 
         #NVright #thanhtien-lower #commit:hover{
@@ -315,9 +314,54 @@ header{
             background-color: #E69826;
         }
 
+/*CSS chọn cửa hàng*/
+#NVleft {
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ddd;
+}
 
+.drk-type {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
 
+#store-selector {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
+    #store-selector:focus {
+        outline: none;
+        border-color: #6c757d;
+        box-shadow: 0 0 5px rgba(108, 117, 125, 0.5);
+    }
 
+    #store-selector option {
+        padding: 10px;
+    }
+
+        #store-selector option:checked {
+            background-color: #0056b3;
+            color: white;
+        }
+
+.soluongsp {
+    width: 50px !important;
+    padding: 5px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+}
 
 

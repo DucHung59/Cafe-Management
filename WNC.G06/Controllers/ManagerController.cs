@@ -377,6 +377,86 @@ public class ManagerController : Controller
         return Json(new { success = true, message = "Cửa hàng đã được khôi phục." });
     }
 
+    /* [HttpGet]
+     public IActionResult NV()
+     {
+         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+         if (string.IsNullOrEmpty(userId))
+         {
+             return RedirectToAction("AccessDenied", "Home");
+         }
+
+         // Lấy danh sách các cửa hàng của người dùng
+         var cafeIds = _dataContext.Cafes
+             .Where(c => c.UserID.ToString() == userId)
+             .Select(c => c.CafeID)
+             .ToList();
+
+         // Truyền danh sách cửa hàng vào ViewBag để hiển thị dropdown
+         var cafes = _dataContext.Cafes.Where(c => cafeIds.Contains(c.CafeID)).ToList();
+         ViewBag.StoreList = cafes;
+
+         // Lấy danh sách sản phẩm của các cửa hàng đã chọn
+         var products = _dataContext.Products
+             .Where(p => cafeIds.Contains(p.CafeID))
+             .Include(p => p.Cafe)
+             .ToList();
+
+         var imageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "Images");
+         var imagePaths = products.Select(product =>
+         {
+             var imagePath = Path.Combine(imageDirectory, product.imgUrl);
+
+             return System.IO.File.Exists(imagePath)
+                 ? $"/css/Images/{product.imgUrl}"
+                 : "/css/Images/default.png";
+         }).ToList();
+
+         // Truyền dữ liệu vào View
+         ViewBag.ImagePaths = imagePaths;
+         return View(products); // Truyền danh sách sản phẩm
+     }*/
+    [HttpGet]
+    public IActionResult NV()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("AccessDenied", "Home");
+        }
+
+        // Lấy danh sách các cửa hàng của người dùng
+        var cafeIds = _dataContext.Cafes
+            .Where(c => c.UserID.ToString() == userId)
+            .Select(c => c.CafeID)
+            .ToList();
+
+        var cafes = _dataContext.Cafes.Where(c => cafeIds.Contains(c.CafeID)).ToList();
+        ViewBag.StoreList = cafes;
+
+        // Lấy danh sách sản phẩm của các cửa hàng đã chọn
+        var products = _dataContext.Products
+            .Where(p => cafeIds.Contains(p.CafeID))
+            .Include(p => p.Cafe)
+            .ToList();
+
+        var imageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "Images");
+        var imagePaths = products.Select(product =>
+        {
+            var imagePath = Path.Combine(imageDirectory, product.imgUrl);
+
+            return System.IO.File.Exists(imagePath)
+                ? $"/css/Images/{product.imgUrl}"
+                : "/css/Images/default.png";
+        }).ToList();
+
+        ViewBag.ImagePaths = imagePaths;
+
+        return View(products);
+    }
+
 
 
     private bool CheckAccess(string permission)

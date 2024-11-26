@@ -3,25 +3,6 @@
     height: 100%;
 }
 
-.bg-secondary{
-    background-color: #217CA3!important;
-}
-
-    .sidebar-header{
-        display: flex;
-        border-bottom: #ffffff solid 1px;
-    }
-
-    .sidebar-header img{
-        width: 20%;
-        height: auto;
-        margin-right: 10px;
-    }
-
-    .sidebar-header .text-center{
-        font-size: 18px;
-        color: #ffffff;
-    }
 
 .btn-group {
     margin: 0 25px;
