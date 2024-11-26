@@ -30,7 +30,7 @@ public class ManagerController : Controller
         {
             return RedirectToAction("AccessDenied", "Home");
         }
-        return View();
+        return RedirectToAction("IndexCafe", "Manager");
     }
 
     [HttpGet]
@@ -77,7 +77,7 @@ public class ManagerController : Controller
         };
 
         await _cafeRepository.AddCafeAsync(newCafe);
-        return RedirectToAction("Index");
+        return RedirectToAction("IndexCafe", "Manager");
     }
 
 
@@ -151,7 +151,7 @@ public class ManagerController : Controller
 
         await _productRepository.AddProductAsync(newProduct);
 
-        return RedirectToAction("Index", "Manager");
+        return RedirectToAction("IndexProduct", "Manager");
     }
 
 
