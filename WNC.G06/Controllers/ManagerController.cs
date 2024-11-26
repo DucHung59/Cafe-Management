@@ -217,7 +217,7 @@ public class ManagerController : Controller
         }
         var username = User.Identity?.Name ?? "Guest";
 
-        var userCafeCount = _cafeRepository.GetCafesByUserId(int.Parse(userId)).Count();
+        var userCafeCount = _cafeRepository.GetCafesByUserId(int.Parse(userId)).Where(x => x.Status != false).Count();
 
         float totalAmount = userCafeCount * 10000000;
 

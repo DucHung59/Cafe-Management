@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Phần mềm quản lý</title>
+    <title>@ViewData["Title"] - Trang Admin</title>
     <link rel="stylesheet" href="~/css/LayoutAdminCN.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -15,10 +15,10 @@
     <div class="container-fluid">
         <div class="row" style="padding: 0px">
             <!-- Sidebar -->
-            <nav class="col-md-2 bg-secondary text-white p-3" style="min-height: 100vh;">
-                <div class="sidebar-header">
-                    <img src="~/css/Images/Icon/logo2.png" alt="anh-logo" width="50%" class="pb-3">
-                    <h4 class="text-center" style="cursor: default">@User.Identity.Name</h4>
+            <nav id="sidebar" class="col-md-2 bg-secondary text-white p-3 toolbar-admin" style="min-height: 100vh;">
+                <div class="sidebar-header pb-3">
+                    <img src="~/css/Images/Icon/logo2.png" alt="anh-logo">
+                    <h4 class="text-header" style="cursor: default">@User.Identity.Name</h4>
                 </div>
                 <div class="accordion accordion-flush" id="accordionFlushExample">
                     <div class="accordion-item">
@@ -46,7 +46,6 @@
                         <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                             <div class="accordion-body bg-secondary d-flex flex-column">
                                 <a asp-action="PaymentList" asp-controller="Admin" class="btn text-white text-start">Danh sách</a>
-                                <a href="#" class="btn text-white text-start">Trạng thái</a>
                             </div>
                         </div>
                     </div>
@@ -58,7 +57,7 @@
             </nav>
 
             <!-- Main Content -->
-            <main class="col-md-10" style="padding: 0px">
+            <main class="col-md-10 main-content-admin" style="padding: 0px">
                 <header class="d-flex justify-content-between align-items-center bg-light p-3">
                     <h3 class="text-header">@ViewData["Title"]</h3>
                     @if (User.Identity.IsAuthenticated)

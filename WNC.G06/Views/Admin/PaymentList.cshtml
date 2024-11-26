@@ -7,40 +7,42 @@
 }
 
 <h2 class ="text-header">Danh sách thanh toán tháng hiện tại</h2>
-<table class="table table-striped table-hover table-bordered mt-5">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Tên người dùng</th>
-            <th>Tháng thanh toán</th>
-            <th>Số tiền</th>
-            <th>Trạng thái</th>
-            <th>Chi tiết</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var payment in Model)
-        {
+<div class="table-reponsive">
+    <table class="table table-striped table-hover table-bordered mt-5">
+        <thead class="fw-bolder">
             <tr>
-                <td>@index</td>
-                <td>@payment.UserName</td>
-                <td>@DateTime.Now.ToString("MM/yyyy")</td>
-                <td>@payment.Amount.ToString("C")</td>
-                <td>
-                    @if(payment.Amount > 0)
-                    {
-                        <span class="text-success">Đã thanh toán</span>
-                    }
-                    else
-                    {
-                        <span class="text-danger">Chưa thanh toán</span>
-                    }
-                </td>
-                <td>
-                    <a href="~/PaymentDetail/@payment.UserID" class="btn btnViewHistory">Xem lịch sử</a>
-                </td>
+                <td>#</td>
+                <td>Tên người dùng</td>
+                <td>Tháng thanh toán</td>
+                <td>Số tiền</td>
+                <td>Trạng thái</td>
+                <td>Chi tiết</td>
             </tr>
-            index++;
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var payment in Model)
+            {
+                <tr>
+                    <td>@index</td>
+                    <td>@payment.UserName</td>
+                    <td>@DateTime.Now.ToString("MM/yyyy")</td>
+                    <td>@payment.Amount.ToString("C")</td>
+                    <td>
+                        @if (payment.Amount > 0)
+                        {
+                            <span class="text-success">Đã thanh toán</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Chưa thanh toán</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="~/PaymentDetail/@payment.UserID" class="btn btnViewHistory">Xem lịch sử</a>
+                    </td>
+                </tr>
+                index++;
+            }
+        </tbody>
+    </table>
+</div>
