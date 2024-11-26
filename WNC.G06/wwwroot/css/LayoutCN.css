@@ -101,7 +101,7 @@ header #avartar img{
 #navbar ul > li {
     width: 100%;
     list-style: none;   
-    padding: 10px 5px;
+    padding: 10px 0px;
     position: relative;
 }
 
@@ -143,8 +143,7 @@ header #avartar img{
     color: #FF5274;
     cursor: pointer;
 }
-
-#mainbody{
+#mainbody {
     width: 82%;
     height: 100%;
 }

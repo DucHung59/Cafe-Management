@@ -1,0 +1,145 @@
+@model IEnumerable<WNC.G06.Models.ProductModel>
+@{
+    Layout = "~/Views/Shared/_LayoutNV.cshtml";
+}
+
+<div id="NVleft">
+    <div class="drk-type">
+        <select id="store-selector" onchange="confirmStoreChange()">
+            <option value="all">Tất cả cửa hàng</option>
+            @foreach (var cafe in ViewBag.StoreList as IEnumerable<WNC.G06.Models.CafeModel>)
+            {
+                <option value="@cafe.CafeID">@cafe.CafeName</option>
+            }
+        </select>
+    </div>
+</div>
+
+<div id="NVmiddle">
+    @foreach (var product in Model)
+    {
+        <div class="product" data-store-id="@product.CafeID" data-product-id="@product.ProductID" data-price="@product.Price" onclick="addToCart(this)">
+            <img src="@ViewBag.ImagePaths[Model.ToList().IndexOf(product)]" alt="ảnh sản phẩm">
+            <div class="tensp">@product.ProductName</div>
+            <div class="giasp">@string.Format("{0:n0} VND", product.Price)</div>
+        </div>
+    }
+</div>
+
+<div id="NVright">
+    <div id="tinhtien">
+        <!-- The selected products will be displayed here -->
+    </div>
+    <div id="thanhtien">
+        <div id="thanhtien-upper">
+            Tạm tính
+            <div id="tientamtinh">0 VND</div>
+        </div>
+        <div id="thanhtien-middle">
+            <div id="thecho">
+                <img src="~/css/Images/Icon/debit-card.svg" class="atm-icon">
+                Thẻ chờ
+            </div>
+            <div id="money">
+                Thành tiền
+                <p id="total-price">0 VND</p>
+            </div>
+        </div>
+        <div id="thanhtien-lower">
+            <input type="button" id="commit" value="Thanh toán">
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmStoreChange() {
+        var selectedStoreId = document.getElementById("store-selector").value;
+        var confirmation = confirm("Bạn có chắc muốn thay đổi cửa hàng không?");
+        if (confirmation) {
+            filterProductsByStore(selectedStoreId);
+        } else {
+            document.getElementById("store-selector").value = document.getElementById("store-selector").getAttribute("data-old-value");
+        }
+    }
+
+    function filterProductsByStore(storeId) {
+        var products = document.querySelectorAll(".product");
+        products.forEach(function (product) {
+            var storeIdValue = product.getAttribute("data-store-id");
+            if (storeId === "all" || storeId === storeIdValue) {
+                product.style.display = "block";
+            } else {
+                product.style.display = "none";
+            }
+        });
+    }
+
+    window.onload = function () {
+        document.getElementById("store-selector").setAttribute("data-old-value", document.getElementById("store-selector").value);
+    }
+
+    function addToCart(productElement) {
+        var productName = productElement.querySelector('.tensp').textContent;
+        var productPrice = parseInt(productElement.getAttribute('data-price'));
+        var productId = productElement.getAttribute('data-product-id');
+
+        var cartItem = document.getElementById(productId);
+
+        if (!cartItem) {
+            // Create a new cart item if it doesn't exist yet
+            cartItem = document.createElement('div');
+            cartItem.id = productId;
+            cartItem.classList.add('sanpham');
+            cartItem.innerHTML = `
+                ${productName}: 
+                <input class="soluongsp" type="number" value="1" min="1" onchange="updateItemPrice('${productId}', ${productPrice})">
+                <div>
+                    <span class="total-price">${productPrice}</span> VND
+                    <img src="/css/Images/Icon/trash.svg" class="trash-icon" alt="Remove" onclick="removeFromCart('${productId}')">
+                </div>
+            `;
+            document.getElementById('tinhtien').appendChild(cartItem);
+        } else {
+            // If the product is already in the cart, increase its quantity
+            var quantityInput = cartItem.querySelector('.soluongsp');
+            var currentQuantity = parseInt(quantityInput.value);
+            var newQuantity = currentQuantity + 1;
+            quantityInput.value = newQuantity;
+            var totalPriceElement = cartItem.querySelector('.total-price');
+            var newTotalPrice = productPrice * newQuantity;
+            totalPriceElement.textContent = newTotalPrice + ' VND';
+        }
+
+        updateTotal(); // Update total when a new product is added or quantity changes
+    }
+
+    function updateItemPrice(productId, productPrice) {
+        var cartItem = document.getElementById(productId);
+        var quantityInput = cartItem.querySelector('.soluongsp');
+        var newQuantity = parseInt(quantityInput.value);
+        var totalPriceElement = cartItem.querySelector('.total-price');
+        var newTotalPrice = productPrice * newQuantity;
+        totalPriceElement.textContent = newTotalPrice + ' VND';
+
+        updateTotal(); // Update the total price of the cart
+    }
+
+    function updateTotal() {
+        var total = 0;
+        var cartItems = document.querySelectorAll('#tinhtien .sanpham');
+        cartItems.forEach(function (item) {
+            var quantity = item.querySelector('.soluongsp').value; // Get quantity value
+            var price = item.querySelector('.total-price').textContent.replace(' VND', ''); // Get the price, remove 'VND'
+            total += parseInt(price); // Add to total
+        });
+        document.getElementById('total-price').textContent = total + ' VND';
+        document.getElementById('tientamtinh').textContent = total + ' VND';
+    }
+
+    function removeFromCart(productId) {
+        var cartItem = document.getElementById(productId);
+        cartItem.remove();
+        updateTotal(); // Update the total after removal
+    }
+
+</script>
