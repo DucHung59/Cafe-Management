@@ -17,6 +17,7 @@
     }
 
     #navbar ul > li {
+        padding-left: 0px;
         align-items: center;
         text-align: center;
     }
@@ -24,4 +25,28 @@
     #mainbody{
         width: 100%;
     }
+
+    /* INDEX CAFE */
+    .form-container-List{
+        justify-content: center;
+    }
+
+    .formmn{
+        width: 100%;
+    }
+
+    .formmn .btnListadd{
+        width: 50%;
+    }
+
+    .outertable{
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .outertable .table{
+        width: 1000px;
+    }
+
 }
