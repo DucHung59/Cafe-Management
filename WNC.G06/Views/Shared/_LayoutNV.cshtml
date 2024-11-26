@@ -9,9 +9,11 @@
 </head>
 <body>
     <header>
-        <div id="name">Nguyễn Đức Lượng</div>
-        <div id="DX">
-            <a>ĐĂNG XUẤT</a>
+        <div><a asp-action="Index" asp-controller="Manager">@User.Identity.Name</a></div>
+        <div class="DX">
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                <a><button type="submit">Đăng xuất</button></a>
+            </form>
         </div>
     </header>
     <div class="container">

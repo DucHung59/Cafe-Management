@@ -6,7 +6,7 @@
 <div id="NVleft">
     <div class="drk-type">
         <select id="store-selector" onchange="confirmStoreChange()">
-            <option value="all">Tất cả cửa hàng</option>
+            <option value="all">Tất cả</option>
             @foreach (var cafe in ViewBag.StoreList as IEnumerable<WNC.G06.Models.CafeModel>)
             {
                 <option value="@cafe.CafeID">@cafe.CafeName</option>
@@ -94,8 +94,8 @@
                 ${productName}: 
                 <input class="soluongsp" type="number" value="1" min="1" onchange="updateItemPrice('${productId}', ${productPrice})">
                 <div>
-                    <span class="total-price">${productPrice}</span> VND
-                    <img src="/css/Images/Icon/trash.svg" class="trash-icon" alt="Remove" onclick="removeFromCart('${productId}')">
+                    <span class="total-price">${productPrice} VND</span>
+                    <img src="/css/Images/Icon/trash.svg" class="trash-icon" cursor: pointer;" alt="Remove" onclick="removeFromCart('${productId}')">
                 </div>
             `;
             document.getElementById('tinhtien').appendChild(cartItem);
