@@ -1,0 +1,47 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Chi tiết hóa đơn";
+    Layout = "~/Views/Shared/_LayoutCN.cshtml";
+    var totalAmount = 0;
+}
+
+<link rel="stylesheet" href="~/css//OrderDetail.css" asp-append-version="true" />
+
+<div class="text-header">
+    <a asp-action="Report" asp-controller="Manager">Hóa đơn</a> / Chi tiết
+</div>
+<div class="container mt-5">
+    @if (Model.Any())
+    {
+        var groupedOrderDate = Model.GroupBy(p => p.OrderDate);
+        <div class="card order-card">
+            @foreach (var orderGroup in groupedOrderDate)
+            {
+                <div class="card-header">
+                    <span>
+                        <strong>Ngày lập hóa đơn:</strong>
+                        @orderGroup.Key.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+                <div class="card-body">
+                    <ul class="product-list">
+                        @foreach (var orderDetail in orderGroup)
+                        {
+                            <li class="list-item">
+                                <span>- <strong>Sản phẩm:</strong> @orderDetail.ProductName </span>
+                                <span>- <strong>Giá:</strong> @orderDetail.Price </span>
+                                <span>- <strong>Số lượng:</strong> @orderDetail.Quantity </span>
+                            </li>
+                            totalAmount += @orderDetail.Price * @orderDetail.Quantity;
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <span>Tổng tiền:</span>
+                    <span>@string.Format("{0:n0} VND", totalAmount)</span>
+                </div>
+            }
+        </div>
+    }
+</div>

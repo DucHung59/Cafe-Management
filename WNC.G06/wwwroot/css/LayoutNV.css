@@ -364,4 +364,29 @@ header{
     border-radius: 4px !important;
 }
 
+.DX a {
+    font-family: bold;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+    .DX a:hover {
+        color: #FF5274;
+        cursor: pointer;
+    }
+
+.DX button {
+    width: 100%;
+    font-family: bold;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: inherit;
+    border: none;
+}
+
+    .DX button:hover {
+        color: #FF5274;
+        cursor: pointer;
+    }
+
 
