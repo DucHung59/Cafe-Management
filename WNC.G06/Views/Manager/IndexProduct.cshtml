@@ -51,12 +51,13 @@
                             {
                                 <button id="delete-btn-@product.ProductID" class="buttonDele" onclick="deleteProduct('@product.ProductID')">Xóa</button>
                                 <button id="restore-btn-@product.ProductID" class="buttonRestore" onclick="restoreProduct('@product.ProductID')" style="display: none;">Khôi phục</button>
-                                    <button id="update-btn-@product.ProductID" class="buttonUpdate" onclick="window.location.href='@Url.Action("UpdateProduct", "Manager", new { productId = product.ProductID })'">Sửa</button>
-                            }
+                                <button id="update-btn-@product.ProductID" class="buttonUpdate" onclick="updateProduct(@product.ProductID)">Sửa</button>
+                               }
                             else  
                             {
                                 <button id="delete-btn-@product.ProductID" class="buttonDele" onclick="deleteProduct('@product.ProductID')" style="display: none;">Xóa</button>
                                 <button id="restore-btn-@product.ProductID" class="buttonRestore" onclick="restoreProduct('@product.ProductID')">Khôi phục</button>
+                                <button id="update-btn-@product.ProductID" class="buttonUpdate" onclick="updateProduct(@product.ProductID)" style="display: none;">Sửa</button>
                             }
                         </td>
                     </tr>
@@ -64,7 +65,6 @@
             </tbody>
         </table>
         </div>
-    </div>
 }
 else
 {
