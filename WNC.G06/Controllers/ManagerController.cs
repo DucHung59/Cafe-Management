@@ -480,4 +480,57 @@ public class ManagerController : Controller
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return int.TryParse(userIdClaim, out int userId) ? userId : 0;
     }*/
+
+    [HttpGet]
+    public IActionResult Report()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var reports = (from o in _dataContext.Orders
+                       join c in _dataContext.Cafes
+                       on o.CafeID equals c.CafeID
+                       join u in _dataContext.Users
+                       on o.UserID equals u.UserID
+                       select new
+                       {
+                           o.OrderID,
+                           o.TotalAmount,
+                           o.OrderDate,
+                           c.CafeID,
+                           c.CafeName,
+                           u.UserName,
+                       }).ToList();
+
+        var cafeIds = _dataContext.Cafes
+            .Where(c => c.UserID.ToString() == userId)
+            .Select(c => c.CafeID)
+            .ToList();
+
+        var cafes = _dataContext.Cafes.Where(c => cafeIds.Contains(c.CafeID)).ToList();
+        ViewBag.StoreList = cafes;
+
+        return View(reports);
+    }
+
+    [Route("Manager/ReportDetail/{id}")]
+    public IActionResult ReportDetail(int id)
+    {
+        var reportdetail = (from od in _dataContext.OrderDetails
+                            join o in _dataContext.Orders
+                            on od.OrderID equals o.OrderID 
+                            join p in _dataContext.Products
+                            on od.ProductID equals p.ProductID
+                            select new
+                            {
+                                o.OrderID,
+                                od.Quantity,
+                                p.ProductName,
+                                p.Price,
+                                o.TotalAmount,
+                                o.OrderDate,
+                            })
+                            .Where(x => x.OrderID == id)
+                            .ToList();
+        return View(reportdetail);
+    }
 }

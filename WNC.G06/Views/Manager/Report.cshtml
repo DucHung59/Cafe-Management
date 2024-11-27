@@ -1,5 +1,84 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<dynamic>
+
 @{
+    ViewData["Title"] = "Báo cáo thống kê";
+    Layout = "~/Views/Shared/_LayoutCN.cshtml";
+    int i = 0;
 }
+<link rel="stylesheet" href="~/css/HienThiDanhSach.css" asp-append-version="true" />
+
+<div class="form-container-List">
+    <h2 class="form-title">Danh sách sản phẩm</h2>
+    <form asp-action="NV" method="get">
+        <button class="btnListadd">Thêm hóa đơn</button>
+    </form>
+    <div>
+        <select id="store-selector" onchange="confirmStoreChange()">
+            <option value="all">Tất cả</option>
+            @foreach (var cafe in ViewBag.StoreList as IEnumerable<WNC.G06.Models.CafeModel>)
+            {
+                <option value="@cafe.CafeID">@cafe.CafeName</option>
+            }
+        </select>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tổng tiền</th>
+                <th>Ngày thanh toán</th>
+                <th>Cửa hàng</th>
+                <th>Người thanh toán</th>
+                <th>Xử lý</th>
+            </tr>
+        </thead>
+        @if (Model.Any())
+        {
+            <tbody>
+                @foreach (var report in Model)
+                {
+                    <tr class="report" id="report-row-@report.OrderID" data-store-id="@report.CafeID">
+                        <td>@(i + 1)</td>
+                        <td class="">@string.Format("{0:n0} VND", report.TotalAmount)</td>
+                        <td class="">
+                            @report.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
+                        </td>
+                        <td class="">@report.CafeName</td>
+                        <td>@report.UserName</td>
+                        <td>
+                            <a href="ReportDetail/@report.OrderID">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        }
+        else
+        {
+            <p>Không có hóa đơn thanh toán!</p>
+        }
+    </table>
+</div>
+<script>
+    function confirmStoreChange() {
+        var selectedStoreId = document.getElementById("store-selector").value;
+        var confirmation = confirm("Bạn có chắc muốn thay đổi cửa hàng không?");
+        if (confirmation) {
+            filterReportsByStore(selectedStoreId);
+        } else {
+            document.getElementById("store-selector").value = document.getElementById("store-selector").getAttribute("data-old-value");
+        }
+    }
+
+    function filterReportsByStore(storeId) {
+        var reports = document.querySelectorAll(".report");
+        reports.forEach(function (report) {
+            var storeIdValue = report.getAttribute("data-store-id");
+            if (storeId === "all" || storeId === storeIdValue) { 
+                report.style.display = "table-row";
+            } else {
+                report.style.display = "none";
+            }
+        });
+    }
+</script>
