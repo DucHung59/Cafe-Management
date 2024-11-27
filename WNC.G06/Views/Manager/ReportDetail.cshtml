@@ -7,39 +7,59 @@
 }
 
 <link rel="stylesheet" href="~/css//OrderDetail.css" asp-append-version="true" />
-
-<div class="text-header">
-    <a asp-action="Report" asp-controller="Manager">Hóa đơn</a> / Chi tiết
+<div class="header-form d-flex justify-content-between">
+    <div class="text-header">
+        <a asp-action="Report" asp-controller="Manager">Hóa đơn</a> / Chi tiết
+    </div>
+    <div class="text-header">
+        <a asp-action="Report" asp-controller="Manager" class="btn btn-submit">
+            Quay lại
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+            </svg>
+        </a>
+    </div>
 </div>
 <div class="container mt-5">
     @if (Model.Any())
     {
-        var groupedOrderDate = Model.GroupBy(p => p.OrderDate);
         <div class="card order-card">
-            @foreach (var orderGroup in groupedOrderDate)
+            @foreach (var cafeGroup in Model)
             {
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between">
                     <span>
                         <strong>Ngày lập hóa đơn:</strong>
-                        @orderGroup.Key.ToString("dd/MM/yyyy")
+                        @cafeGroup.OrderDate.ToString("dd/MM/yyyy")
+                    </span>
+                    <span>
+                        <strong>Quán:</strong>
+                        @cafeGroup.CafeName
                     </span>
                 </div>
                 <div class="card-body">
-                    <ul class="product-list">
-                        @foreach (var orderDetail in orderGroup)
-                        {
-                            <li class="list-item">
-                                <span>- <strong>Sản phẩm:</strong> @orderDetail.ProductName </span>
-                                <span>- <strong>Giá:</strong> @orderDetail.Price </span>
-                                <span>- <strong>Số lượng:</strong> @orderDetail.Quantity </span>
-                            </li>
-                            totalAmount += @orderDetail.Price * @orderDetail.Quantity;
-                        }
-                    </ul>
-                </div>
-                <div class="card-footer">
-                    <span>Tổng tiền:</span>
-                    <span>@string.Format("{0:n0} VND", totalAmount)</span>
+                    <table>
+                        <thead class="tabletitle">
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var orderDetail in cafeGroup.Orders)
+                            {
+                                <tr class="service">
+                                    <td class="itemtext">@orderDetail.ProductName </td>
+                                    <td class="itemtext">@orderDetail.Quantity </td>
+                                    <td class="itemtext">@string.Format("{0:n0} VND", orderDetail.Price) </td>
+                                </tr>
+                                totalAmount += @orderDetail.Price * @orderDetail.Quantity;
+                            }
+                            <tr class="tabletitle fw-bold">
+                                <td></td>
+                                <td class="Rate">Tổng tiền:</td>
+                                <td class="payment">@string.Format("{0:n0} VND", totalAmount)</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             }
         </div>
