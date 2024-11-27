@@ -42,14 +42,14 @@
                             {
                                 <button id="delete-btn-@cafe.CafeID" class="buttonDele" onclick="deleteCafe('@cafe.CafeID')">Xóa</button>
                                 <button id="restore-btn-@cafe.CafeID" class="buttonRestore" onclick="restoreCafe('@cafe.CafeID')" style="display: none;">Khôi phục</button>
-                                    <button id="update-btn-@cafe.CafeID" class="buttonUpdate" onclick="window.location.href='@Url.Action("UpdateCafe", "Manager", new { cafeId = cafe.CafeID })'">Sửa</button>
+                                <button id="update-btn-@cafe.CafeID" class="buttonUpdate" onclick="updateCafe(@cafe.CafeID)">Sửa</button>
 
                             }
                             else
                             {
                                 <button id="delete-btn-@cafe.CafeID" class="buttonDele" onclick="deleteCafe('@cafe.CafeID')" style="display: none;">Xóa</button>
                                 <button id="restore-btn-@cafe.CafeID" class="buttonRestore" onclick="restoreCafe('@cafe.CafeID')">Khôi phục</button>
-
+                                <button id="update-btn-@cafe.CafeID" class="buttonUpdate" onclick="updateCafe(@cafe.CafeID)" style="display: none;">Sửa</button>
                             }
                         </td>
                     </tr>
