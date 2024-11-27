@@ -51,4 +51,17 @@
         width: 1000px;
     }
 
+    #mainbody .form-container{
+        width: 100%;
+        margin: 0px;
+    }
+
+    #mainbody .container{
+        width: 100%;
+    }
+
+    #mainbody .container .order-card{
+        width: 100%;
+    }
+
 }
