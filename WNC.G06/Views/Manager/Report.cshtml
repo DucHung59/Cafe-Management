@@ -9,7 +9,7 @@
 
 <div class="form-container-List">
     <h2 class="form-title">Danh sách sản phẩm</h2>
-    <form asp-action="NV" method="get">
+    <form asp-action="NV" method="get" class="formmn">
         <button class="btnListadd">Thêm hóa đơn</button>
     </form>
     <div>
@@ -21,7 +21,8 @@
             }
         </select>
     </div>
-    <table class="table">
+    <div class="outertable">
+        <table class="table">
         <thead>
             <tr>
                 <th>STT</th>
@@ -58,6 +59,7 @@
             <p>Không có hóa đơn thanh toán!</p>
         }
     </table>
+    </div>
 </div>
 <script>
     function confirmStoreChange() {
