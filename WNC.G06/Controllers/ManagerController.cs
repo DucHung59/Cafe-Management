@@ -692,11 +692,14 @@ public class ManagerController : Controller
     {
         var reportdetail = (from od in _dataContext.OrderDetails
                             join o in _dataContext.Orders
-                            on od.OrderID equals o.OrderID 
+                            on od.OrderID equals o.OrderID
                             join p in _dataContext.Products
                             on od.ProductID equals p.ProductID
+                            join c in _dataContext.Cafes
+                            on o.CafeID equals c.CafeID
                             select new
                             {
+                                c.CafeName,
                                 o.OrderID,
                                 od.Quantity,
                                 p.ProductName,
@@ -705,7 +708,20 @@ public class ManagerController : Controller
                                 o.OrderDate,
                             })
                             .Where(x => x.OrderID == id)
-                            .ToList();
+                            .GroupBy(x => new { x.CafeName, x.OrderDate })
+                            .Select(group => new
+                            {
+                                group.Key.CafeName,
+                                group.Key.OrderDate,
+                                Orders = group.Select(order => new
+                                {
+                                    order.OrderID,
+                                    order.ProductName,
+                                    order.Quantity,
+                                    order.Price,
+                                    order.TotalAmount
+                                }).ToList()
+                            }).ToList();
         return View(reportdetail);
     }
 }
