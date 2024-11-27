@@ -6,6 +6,7 @@
 
     header{
         width: 100%;
+        position: relative;
     }
 
     #navbar{
@@ -24,6 +25,7 @@
 
     #mainbody{
         width: 100%;
+        padding-left: 0px;
     }
 
     /* INDEX CAFE */
