@@ -278,7 +278,7 @@ public class ManagerController : Controller
 
     // POST: UpdateCafe
     [HttpPost]
-    public async Task<IActionResult> UpdateCafe(CafeModel cafe, IFormFile uploadedImage)
+    public async Task<IActionResult> UpdateCafe(CafeModel cafe)
     {
         var existingCafe = _dataContext.Cafes.FirstOrDefault(c => c.CafeID == cafe.CafeID);
 

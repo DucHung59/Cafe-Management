@@ -1,4 +1,6 @@
-﻿
+﻿async function updateProduct(productId) {
+    window.location.href = `/Manager/UpdateProduct?productId=${productId}`;
+}
 async function deleteProduct(productId) {
     const isConfirmed = confirm('Bạn có chắc muốn xóa đi không?');
     if (!isConfirmed) return; 
@@ -23,6 +25,7 @@ async function deleteProduct(productId) {
         image.classList.add('dimmed');
         document.getElementById(`restore-btn-${productId}`).style.display = 'inline-block';
         document.getElementById(`delete-btn-${productId}`).style.display = 'none';
+        document.getElementById(`update-btn-${productId}`).style.display = 'none';
 
         alert(result.message);
     } else {
@@ -54,6 +57,7 @@ async function restoreProduct(productId) {
 
         document.getElementById(`restore-btn-${productId}`).style.display = 'none';
         document.getElementById(`delete-btn-${productId}`).style.display = 'inline-block';
+        document.getElementById(`update-btn-${productId}`).style.display = 'inline-block';
 
         alert(result.message);
     } else {

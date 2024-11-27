@@ -1,4 +1,6 @@
-﻿
+﻿async function updateCafe(cafeId) {
+    window.location.href = `/Manager/UpdateCafe?cafeId=${cafeId}`;
+}
 async function deleteCafe(cafeId) {
     const isConfirmed = confirm('Bạn có chắc muốn xóa đi không?');
     if (!isConfirmed) return;
@@ -21,7 +23,7 @@ async function deleteCafe(cafeId) {
         });
         document.getElementById(`restore-btn-${cafeId}`).style.display = 'inline-block';
         document.getElementById(`delete-btn-${cafeId}`).style.display = 'none';
-
+        document.getElementById(`update-btn-${cafeId}`).style.display = 'none';
         alert(result.message);
     } else {
         alert(result.message);
@@ -49,6 +51,7 @@ async function restoreCafe(cafeId) {
 
         document.getElementById(`restore-btn-${cafeId}`).style.display = 'none';
         document.getElementById(`delete-btn-${cafeId}`).style.display = 'inline-block';
+        document.getElementById(`update-btn-${cafeId}`).style.display = 'inline-block';
 
         alert(result.message);
     } else {
