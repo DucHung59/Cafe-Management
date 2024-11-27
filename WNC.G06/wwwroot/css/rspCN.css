@@ -1,0 +1,52 @@
+@media screen and (max-width: 900px){
+
+    body{
+        flex-direction: column;
+    }
+
+    header{
+        width: 100%;
+    }
+
+    #navbar{
+        align-items: center;
+    }
+
+    .DX{
+        align-items: center;
+    }
+
+    #navbar ul > li {
+        padding-left: 0px;
+        align-items: center;
+        text-align: center;
+    }
+
+    #mainbody{
+        width: 100%;
+    }
+
+    /* INDEX CAFE */
+    .form-container-List{
+        justify-content: center;
+    }
+
+    .formmn{
+        width: 100%;
+    }
+
+    .formmn .btnListadd{
+        width: 50%;
+    }
+
+    .outertable{
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .outertable .table{
+        width: 1000px;
+    }
+
+}

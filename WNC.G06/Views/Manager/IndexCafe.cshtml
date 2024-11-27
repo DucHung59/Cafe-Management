@@ -11,10 +11,11 @@
 {
     <div class="form-container-List">
         <h2 class="form-title">Danh sách cửa hàng</h2>
-        <form asp-action="AddCafe" method="get">
+        <form asp-action="AddCafe" method="get" class="formmn">
             <button class="btnListadd">Thêm cửa hàng</button>
         </form>
-        <table class="table">
+        <div class="outertable">
+            <table  class="table">
             <thead>
                 <tr>
                     <th>STT</th>
@@ -54,6 +55,7 @@
                 }
             </tbody>
         </table>
+        </div>
     </div>
 }
 else
@@ -63,7 +65,8 @@ else
         <form asp-action="AddCafe" method="get">
             <button class="btnListadd">Thêm cửa hàng</button>
         </form>
-        <table class="table">
+        <div class="outertable">
+            <table class="table">
             <thead>
                 <tr>
                     <th>STT</th>
@@ -75,6 +78,7 @@ else
                 </tr>
             </thead>
         </table>
+        </div>    
     </div>
 
     <p>Danh sách cửa hàng trống.</p>
