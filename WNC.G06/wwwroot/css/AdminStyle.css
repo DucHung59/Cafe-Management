@@ -51,14 +51,14 @@ table {
     }
 
 .btn-submit {
-    color: #FDBA38;
-    border-color: #FDBA38;
+    color: #FDBA38 !important;
+    border-color: #FDBA38 !important;
 }
 
     .btn-submit:hover {
-        color: #fff;
-        background-color: #FDBA38;
-        border-color: #FDBA38;
+        color: #fff !important;
+        background-color: #FDBA38 !important;
+        border-color: #FDBA38 !important;
     }
 
     .btn-check:focus + .btn-submit, .btn-submit:focus {
