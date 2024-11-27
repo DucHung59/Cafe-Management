@@ -188,6 +188,64 @@ public class ManagerController : Controller
         return View(products);
     }
 
+    [HttpGet]
+    public IActionResult UpdateProduct(int productId)
+    {
+        var product = _dataContext.Products.FirstOrDefault(p => p.ProductID == productId);
+
+        if (product == null)
+        {
+            return NotFound("Sản phẩm không tồn tại.");
+        }
+
+        return View(product); // Trả về view với thông tin sản phẩm
+    }
+    [HttpPost]
+    public async Task<IActionResult> UpdateProduct(ProductModel product, IFormFile uploadedImage)
+    {
+        var existingProduct = _dataContext.Products.FirstOrDefault(p => p.ProductID == product.ProductID);
+
+        if (existingProduct == null)
+        {
+            return NotFound("Sản phẩm không tồn tại.");
+        }
+
+        // Cập nhật thông tin cơ bản của sản phẩm
+        existingProduct.ProductName = product.ProductName;
+        existingProduct.Price = product.Price;
+        existingProduct.Description = product.Description;
+
+        // Nếu có ảnh mới được tải lên
+        if (uploadedImage != null && uploadedImage.Length > 0)
+        {
+            string imageName = Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
+            string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/css/Images", imageName);
+
+            // Lưu ảnh mới
+            using (var stream = new FileStream(savePath, FileMode.Create))
+            {
+                await uploadedImage.CopyToAsync(stream);
+            }
+
+            // Xóa ảnh cũ (nếu cần)
+            if (!string.IsNullOrEmpty(existingProduct.imgUrl))
+            {
+                string oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/css/Images", existingProduct.imgUrl);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            // Cập nhật ảnh trong database
+            existingProduct.imgUrl = imageName;
+        }
+
+        // Lưu thay đổi vào database
+        await _dataContext.SaveChangesAsync();
+
+        return RedirectToAction("IndexProduct", "Manager");
+    }
 
     [HttpGet]
     public IActionResult IndexCafe()
@@ -203,6 +261,42 @@ public class ManagerController : Controller
         var cafes = _cafeRepository.GetCafesByUserId(userId);
 
         return View(cafes);
+    }
+    // GET: UpdateCafe
+    [HttpGet]
+    public IActionResult UpdateCafe(int cafeId)
+    {
+        var cafe = _dataContext.Cafes.FirstOrDefault(c => c.CafeID == cafeId);
+
+        if (cafe == null)
+        {
+            return NotFound("Cửa hàng không tồn tại.");
+        }
+
+        return View(cafe); // Trả về view với thông tin cửa hàng
+    }
+
+    // POST: UpdateCafe
+    [HttpPost]
+    public async Task<IActionResult> UpdateCafe(CafeModel cafe, IFormFile uploadedImage)
+    {
+        var existingCafe = _dataContext.Cafes.FirstOrDefault(c => c.CafeID == cafe.CafeID);
+
+        if (existingCafe == null)
+        {
+            return NotFound("Cửa hàng không tồn tại.");
+        }
+
+        // Cập nhật thông tin cửa hàng
+        existingCafe.CafeName = cafe.CafeName;
+        existingCafe.Address = cafe.Address;
+        existingCafe.Phone = cafe.Phone;
+        existingCafe.Description = cafe.Description;
+
+        // Lưu thay đổi vào database
+        await _dataContext.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Manager"); // Chuyển hướng về danh sách cửa hàng
     }
 
 
@@ -457,6 +551,87 @@ public class ManagerController : Controller
         return View(products);
     }
 
+    [HttpPost]
+    public IActionResult ThanhToan([FromBody] ThanhToanRequest request)
+    {
+        // Kiểm tra dữ liệu đầu vào
+        if (request == null || request.ProductIds == null || request.Quantities == null || request.CafeId <= 0)
+        {
+            return Json(new { success = false, message = "Dữ liệu không hợp lệ!" });
+        }
+
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Json(new { success = false, message = "Người dùng chưa đăng nhập." });
+        }
+
+        if (request.ProductIds.Count == 0 || request.Quantities.Count == 0)
+        {
+            return Json(new { success = false, message = "Giỏ hàng trống hoặc có lỗi trong dữ liệu sản phẩm!" });
+        }
+
+        try
+        {
+            // Tạo hóa đơn
+            var order = new OrderModel
+            {
+                UserID = int.Parse(userId),
+                CafeID = request.CafeId,
+                TotalAmount = 0, // Khởi tạo là decimal
+                OrderDate = DateTime.Now
+            };
+
+            // Lưu hóa đơn vào cơ sở dữ liệu
+            _dataContext.Orders.Add(order);
+            _dataContext.SaveChanges();
+
+            float totalAmount = 0;
+
+            // Thêm chi tiết hóa đơn
+            for (int i = 0; i < request.ProductIds.Count; i++)
+            {
+                var product = _dataContext.Products.FirstOrDefault(p => p.ProductID == request.ProductIds[i]);
+                if (product != null)
+                {
+                    var orderDetail = new OrderDetailModel
+                    {
+                        OrderID = order.OrderID,
+                        ProductID = request.ProductIds[i],
+                        Quantity = request.Quantities[i],
+                        Price = product.Price
+                    };
+
+                    _dataContext.OrderDetails.Add(orderDetail);
+                    totalAmount += product.Price * request.Quantities[i]; // Tính tổng tiền
+                }
+                else
+                {
+                    return Json(new { success = false, message = $"Sản phẩm với ID {request.ProductIds[i]} không tồn tại!" });
+                }
+            }
+
+            // Cập nhật tổng tiền
+            order.TotalAmount = totalAmount;
+            _dataContext.SaveChanges();
+
+            return Json(new { success = true, message = "Thanh toán thành công!" });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during payment: {ex.Message}");
+            return Json(new { success = false, message = "Có lỗi xảy ra khi thanh toán. Vui lòng thử lại." });
+        }
+    }
+
+    // Tạo lớp để nhận dữ liệu JSON từ frontend
+    public class ThanhToanRequest
+    {
+        public List<int> ProductIds { get; set; }
+        public List<int> Quantities { get; set; }
+        public int CafeId { get; set; }
+    }
 
 
     private bool CheckAccess(string permission)

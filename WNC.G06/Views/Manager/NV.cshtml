@@ -1,4 +1,5 @@
 @model IEnumerable<WNC.G06.Models.ProductModel>
+
 @{
     Layout = "~/Views/Shared/_LayoutNV.cshtml";
 }
@@ -46,7 +47,7 @@
             </div>
         </div>
         <div id="thanhtien-lower">
-            <input type="button" id="commit" value="Thanh toán">
+            <input type="button" id="commit" value="Thanh toán" onclick="thanhToan()">
         </div>
     </div>
 </div>
@@ -91,13 +92,13 @@
             cartItem.id = productId;
             cartItem.classList.add('sanpham');
             cartItem.innerHTML = `
-                ${productName}: 
-                <input class="soluongsp" type="number" value="1" min="1" onchange="updateItemPrice('${productId}', ${productPrice})">
-                <div>
-                    <span class="total-price">${productPrice} VND</span>
-                    <img src="/css/Images/Icon/trash.svg" class="trash-icon" cursor: pointer;" alt="Remove" onclick="removeFromCart('${productId}')">
-                </div>
-            `;
+                    ${productName}:
+                    <input class="soluongsp" type="number" value="1" min="1" onchange="updateItemPrice('${productId}', ${productPrice})">
+                    <div>
+                        <span class="total-price">${productPrice} VND</span>
+                        <img src="/css/Images/Icon/trash.svg" class="trash-icon" alt="Remove" onclick="removeFromCart('${productId}')">
+                    </div>
+                `;
             document.getElementById('tinhtien').appendChild(cartItem);
         } else {
             // If the product is already in the cart, increase its quantity
@@ -142,4 +143,64 @@
         updateTotal(); // Update the total after removal
     }
 
+    function thanhToan() {
+        if (confirm("Bạn có chắc chắn muốn thanh toán không?")) {
+            let productIds = [];
+            let quantities = [];
+            let cafeId = document.getElementById("store-selector").value;
+
+            // Kiểm tra xem cửa hàng đã được chọn chưa
+            if (!cafeId || cafeId === 'all') {
+                alert("Vui lòng chọn cửa hàng để thanh toán!");
+                return;
+            }
+
+            // Lấy dữ liệu sản phẩm từ giỏ hàng
+            document.querySelectorAll(".sanpham").forEach(function (item) {
+                let productId = parseInt(item.id); // Convert ID sản phẩm sang số nguyên
+                let quantity = parseInt(item.querySelector('.soluongsp').value); // Lấy số lượng
+
+                if (!isNaN(productId) && !isNaN(quantity) && quantity > 0) {
+                    productIds.push(productId);
+                    quantities.push(quantity);
+                }
+            });
+
+            // Kiểm tra giỏ hàng
+            if (productIds.length === 0 || quantities.length === 0) {
+                alert("Giỏ hàng trống hoặc có lỗi trong dữ liệu sản phẩm!");
+                return;
+            }
+
+            // Gửi dữ liệu tới backend
+            fetch('/Manager/ThanhToan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productIds: productIds,
+                    quantities: quantities,
+                    cafeId: parseInt(cafeId) // Đảm bảo cafeId là số
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        // Xóa giỏ hàng sau khi thanh toán thành công
+                        document.getElementById('tinhtien').innerHTML = '';
+                        document.getElementById('total-price').textContent = '0 VND';
+                        document.getElementById('tientamtinh').textContent = '0 VND';
+                        window.location.href = '/Home/Index';
+                    } else {
+                        alert("Lỗi: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during payment:', error);
+                    alert("Có lỗi xảy ra khi thanh toán. Vui lòng thử lại.");
+                });
+        }
+    }
 </script>

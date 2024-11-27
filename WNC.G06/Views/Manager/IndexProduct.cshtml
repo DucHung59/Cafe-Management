@@ -55,6 +55,7 @@
                             {
                                 <button id="delete-btn-@product.ProductID" class="buttonDele" onclick="deleteProduct('@product.ProductID')">Xóa</button>
                                 <button id="restore-btn-@product.ProductID" class="buttonRestore" onclick="restoreProduct('@product.ProductID')" style="display: none;">Khôi phục</button>
+                                    <button id="update-btn-@product.ProductID" class="buttonUpdate" onclick="window.location.href='@Url.Action("UpdateProduct", "Manager", new { productId = product.ProductID })'">Sửa</button>
                             }
                             else  
                             {
